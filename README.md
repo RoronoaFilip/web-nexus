@@ -22,15 +22,23 @@ Project made for passing the JS Advanced Course @ FMI
 
 ### Backend Integration
 
-#### Express Server API
-- The API serves as the the main source of the data that the library inserts dynamically in the HTML.
-- All data gets processed and sent to the library that just handles the dynamic HTML.
+1. **Express Server API**
+   - The API serves as the primary data source for dynamic HTML content generation by the library.
+   - Responsible for processing all data and forwarding it to the library for seamless integration.
 
-#### Socket Communication
-- Socket utilization, not only for the Live Chat, but for other things (not yet determined) that will require periodical live updates.
+2. **Socket Communication**
+   - Utilizes sockets not only for the Live Chat but also for other Functionalities requiring periodic live updates yet to be determined.
 
-#### Authorization Mechanism
-- All Calls to the Backend will have to be authorized. Authorization will most likely be done with Json Web Tokens
+3. **Authorization Mechanism**
+   - All calls to the backend must undergo authorization.
+   - Authorization is planned to be implemented using Json Web Tokens (JWT).
 
-#### We plan on using Redis for some yet unknown functionality
+4. **Redis Integration**
+   - **Usage:** Planned for some yet-to-be-determined functionality.
+   - **Purpose:** Enhance the backend with Redis for optimized data storage, caching, or other potential use cases.
+
+### Library
+   - A Number of Functions, that call the Backend.
+   - Dynamically append the received Data or HTML Elements in the HTML they are Used in.
+   - Attach event listeners to the Elements.
 ---
