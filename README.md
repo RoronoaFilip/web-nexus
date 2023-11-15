@@ -1,13 +1,13 @@
-# js_advanced_project - Name TBD
+# Web Nexus
 Project made for passing the JS Advanced Course @ FMI
 
 # Project Overview
 
 ## Goal
-- Simplify the Process of enhancing Websites with complex Functionalities effortlessly.  
+- `Web Nexus` simplifies the Process of enhancing Websites with complex Functionalities effortlessly.  
 - The Project offers a Library, packaged with Webpack, providing Users with straightforward Functions to seamlessly integrate complex Logic into their HTML Files.
 - Simple example:
-     * I am building a Website and I want to integrade a Live Chat System. Through *this Project's name* I can do it by just providing an empty div and some Configuration. Everything else is handled for me.
+     * I am building a Website and I want to integrade a Live Chat System. Through `Web Nexus` I can do it by just providing an empty div and some Configuration. Everything else is handled for me by `Web Nexus`.
 
 ## Functionalities Available
 
