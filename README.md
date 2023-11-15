@@ -4,23 +4,27 @@ Project made for passing the JS Advanced Course @ FMI
 # Project Overview
 
 ## Goal
-- Simplify the Process of enhancing Websites with sophisticated Functionalities effortlessly.  
+- Simplify the Process of enhancing Websites with complex Functionalities effortlessly.  
 - The Project offers a Library, packaged with Webpack, providing Users with straightforward Functions to seamlessly integrate complex Logic into their HTML Files.
+- Simple example:
+     * I am building a Website and I want to integrade a Live Chat System. Through *this Project's name* I can do it by just providing an empty div and some Configuration. Everything else is handled for me.
 
 ## Functionalities Available
 
 1. **Live Chat**
    - Facilitate real-time communication on websites through an easy-to-use live chat functionality.
 
-2. **Charts**
-   - Integrate visually appealing and interactive charts to present data effectively.
-   - They could be dynamic, get updated live all the time.
+2. **Infinite Scroll**
+   - Provides the User with an easy way to integrade an Infinite Scroll and visualize whatever and however he wants to.
    
 - *(More functionalities to be determined)*
 
 ## Implementation
 
 ### Backend Integration
+
+* The General Idea for the Backend is that all the needed Data will come from it. Including the Html Elements for the different Functionalities.
+* The Library will just append them where needed and will attach event Listeners.
 
 1. **Express Server API**
    - The API serves as the primary data source for dynamic HTML content generation by the library.
