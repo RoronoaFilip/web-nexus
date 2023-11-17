@@ -191,10 +191,10 @@
     <p>&copy; 2023 Filip Filchev's Site. All rights reserved.</p>
 </footer>
 <script>
+    sdk.setChatBoxDivId('chat-container')
     sdk.createLoginForm();
-    sdk.createPieChart("pie-chart-id");
     document.getElementById('new-chat-button').addEventListener('click', function () {
-        sdk.createChatBox('chat-container', document.getElementById('chat-recipient-input').value.trim());
+        sdk.createChatBox(document.getElementById('chat-recipient-input').value.trim());
     });
 </script>
 </body>

@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const {Server} = require('socket.io');
+const socketIO = require('socket.io');
 const {createFileReadStream} = require('./utils/file_read_stream');
 const {createTransformStream} = require('./utils/file_transform');
 const {responseHandlers} = require('./utils/response_handlers');
@@ -9,7 +9,7 @@ const http = require('http');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
+const io = new socketIO.Server(server, {
   cors: {
     origin: '*',
   },
@@ -33,7 +33,6 @@ app.get('/sdk', function(req, res) {
 
   const readStream = createFileReadStream(filePath)
       .on('error', function(err) {
-        res.write(err.message);
         responseHandlers.internalServer(req, res, true);
       });
 
@@ -63,17 +62,12 @@ app.post('/chat', (req, res) => {
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  // Listen for chat messages
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
-
   // Handle private messages
   socket.on('send private message', (data) => {
-    const {to, message} = data;
+    const {to, message, from} = data;
     const toSocket = users[to];
     if (toSocket) {
-      toSocket.emit('receive private message', {from: socket.id, message, username: data.username});
+      toSocket.emit('receive private message', {from, message});
     } else {
       // Handle user not found
       socket.emit('private message error', `User ${to} not found`);

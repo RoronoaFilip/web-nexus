@@ -1,27 +1,26 @@
 const io = require('socket.io-client');
 let socket;
-let username;
-let chatsDivId;
+let currentUser;
+let chatsContainerDivId;
 
-function setUpSocketCommunication(recipient) {
-  function appendMessage(messageDiv, recipient) {
-    let chatMessages = document.getElementById('chatMessages' + recipient);
+function appendMessage(messageDiv, recipient) {
+  let chatMessages = document.getElementById('chatMessages' + recipient);
 
-    if (!chatMessages) {
-      fetchChatBox(chatsDivId, recipient).then(() => {
-        chatMessages = chatMessages || document.getElementById('chatMessages' + recipient);
-        chatMessages && chatMessages.appendChild(messageDiv);
-      });
-    } else {
-      setTimeout(() => {
-        chatMessages = chatMessages || document.getElementById('chatMessages' + recipient);
-        chatMessages && chatMessages.appendChild(messageDiv);
-      }, 0);
-    }
+  function append() {
+    chatMessages = chatMessages || document.getElementById('chatMessages' + recipient);
+    chatMessages && chatMessages.appendChild(messageDiv);
   }
 
+  if (!chatMessages) {
+    fetchChatBox(recipient).then(append);
+  } else {
+    setTimeout(append, 0);
+  }
+}
+
+function setUpSocketCommunication(recipient) {
   // Send a private message
-  document.getElementById('chatBox' + recipient).addEventListener('submit', function (e) {
+  document.getElementById('formSubmit' + recipient).addEventListener('submit', function (e) {
     const messageInput = document.getElementById('messageInput' + recipient);
     const message = messageInput.value.trim();
     e.preventDefault();
@@ -32,18 +31,32 @@ function setUpSocketCommunication(recipient) {
       messageDiv.textContent = message;
       appendMessage(messageDiv, recipient);
 
-      socket.emit('send private message', {from: username, to, message});
       messageInput.value = '';
       messageInput.focus();
+
+      if (currentUser === recipient) {
+        return; // We have messaged ourselves
+      }
+
+      socket.emit('send private message', {from: currentUser, to, message});
     }
   });
 
+  document.getElementById('close-button' + recipient).addEventListener('click', function (e) {
+    e.preventDefault();
+    const chatBox = document.getElementById('chatBox' + recipient);
+    chatBox.remove();
+  });
+}
+
+function setUpReceive(socket) {
   // Receive private messages
   socket.on('receive private message', function (data) {
+    const {from, message} = data;
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message received-message';
-    messageDiv.textContent = data.message;
-    appendMessage(messageDiv, data.username);
+    messageDiv.textContent = message;
+    appendMessage(messageDiv, from);
   });
 
   // Handle errors for private messages
@@ -55,12 +68,16 @@ function setUpSocketCommunication(recipient) {
 function addUserOnline(username, password) {
   socket = io('http://localhost:8081');
 
+  currentUser = username;
+  console.log(password);
+
   // fetch post request for login and auth
   socket.emit('store user', username);
-  console.log(password);
+
+  setUpReceive(socket);
 }
 
-function fetchChatBox(divId, recipient) {
+function fetchChatBox(recipient) {
   return fetch('http://localhost:8080/chat', {
     method: 'POST',
     headers: {
@@ -74,14 +91,18 @@ function fetchChatBox(divId, recipient) {
       .then((body) => {
         const chatBoxDiv = document.createElement('div');
         chatBoxDiv.innerHTML = body;
-        document.getElementById(divId).appendChild(chatBoxDiv);
+        document.getElementById(chatsContainerDivId).appendChild(chatBoxDiv);
         setUpSocketCommunication(recipient);
         return body;
       });
 }
 
-function createChatBox(divId, recipient) {
-  fetchChatBox(divId, recipient).then();
+function createChatBox(recipient) {
+  fetchChatBox(recipient).then();
 }
 
-module.exports = {createChatBox, addUserOnline};
+function setChatBoxDivId(divId) {
+  chatsContainerDivId = divId;
+}
+
+module.exports = {createChatBox, addUserOnline, setChatBoxDivId};
