@@ -46,3 +46,11 @@ Project made for passing the JS Advanced Course @ FMI
    - Dynamically append the received Data or HTML Elements in the HTML they are Used in.
    - Attach event listeners to the Elements.
 ---
+
+# Versions
+
+### Version 1.1.0
+Add Live Chat Functionality
+
+### Version 1.0.0
+initial commit
