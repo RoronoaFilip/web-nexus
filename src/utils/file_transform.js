@@ -6,39 +6,39 @@ const {transformText} = require('./transform_text');
  * in the File with the value of replacementMap[key]
  *
  * @param replacementMap the map of keys to values
- * @returns a Transform stream for the File
+ * @return a Transform stream for the File
  */
 function createTransformStream(replacementMap) {
-    replacementMap = replacementMap || {};
-    return new Transform({
-        encoding: 'utf8',
-        buffer: '',
-        transform(chunk, encoding, cb) {
-            const chunkString = chunk.toString();
-            this.buffer = (this.buffer || '') + chunkString;
+  replacementMap = replacementMap || {};
+  return new Transform({
+    encoding: 'utf8',
+    buffer: '',
+    transform(chunk, encoding, cb) {
+      const chunkString = chunk.toString();
+      this.buffer = (this.buffer || '') + chunkString;
 
-            if (this.buffer.includes('\n')) {
-                const lines = this.buffer.split('\n');
-                this.buffer = lines.pop();
+      if (this.buffer.includes('\n')) {
+        const lines = this.buffer.split('\n');
+        this.buffer = lines.pop();
 
-                for (const i in lines) {
-                    this.push(transformText(replacementMap, lines[i]) + '\n');
-                }
-
-                return cb();
-            }
-
-            return cb();
-        },
-        flush(cb) {
-            if (this.buffer) {
-                const transformedLine = transformText(replacementMap, this.buffer);
-                this.push(transformedLine);
-            }
-            replacementMap = {};
-            return cb();
+        for (const i in lines) {
+          this.push(transformText(replacementMap, lines[i]) + '\n');
         }
-    });
+
+        return cb();
+      }
+
+      return cb();
+    },
+    flush(cb) {
+      if (this.buffer) {
+        const transformedLine = transformText(replacementMap, this.buffer);
+        this.push(transformedLine);
+      }
+      replacementMap = {};
+      return cb();
+    },
+  });
 }
 
 module.exports = {createTransformStream};

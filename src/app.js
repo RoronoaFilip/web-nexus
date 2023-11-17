@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const {Server} = require('socket.io');
-const {generateHexColors} = require('./utils/generate_random_hex_colors');
 const {createFileReadStream} = require('./utils/file_read_stream');
 const {createTransformStream} = require('./utils/file_transform');
 const {responseHandlers} = require('./utils/response_handlers');
@@ -29,40 +28,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.raw());
 
-app.get('/sdk', function (req, res) {
+app.get('/sdk', function(req, res) {
   const filePath = '../dist/bundle.js';
 
   const readStream = createFileReadStream(filePath)
-      .on('error', function (err) {
-        responseHandlers.INTERNAL_SERVER(req, res, err.message, true);
+      .on('error', function(err) {
+        res.write(err.message);
+        responseHandlers.internalServer(req, res, true);
       });
 
   res.setHeader('Content-Type', 'application/javascript');
-
-  readStream.pipe(res);
-});
-
-app.get('/pie-chart/:sectionsCount', function (req, res) {
-  const responseBody = {};
-  const sectionsCount = req.params.sectionsCount;
-  const colors = generateHexColors(sectionsCount);
-
-  const percentages = [ 15, 20, 25, 40 ];
-  const remainingPercentage = 100;
-
-  responseBody.sectionsCount = sectionsCount;
-  responseBody.colors = colors;
-  responseBody.percentages = percentages;
-
-  res.write(JSON.stringify(responseBody));
-  res.end();
-});
-
-app.get('/pie-chart', function (req, res) {
-  const readStream = createFileReadStream('./pages/pie_chart.html')
-      .on('error', function (err) {
-        responseHandlers.INTERNAL_SERVER(req, res, err.message, true);
-      });
 
   readStream.pipe(res);
 });
@@ -113,7 +88,7 @@ io.on('connection', (socket) => {
   // Handle disconnect
   socket.on('disconnect', () => {
     // Remove user information on disconnect
-    for (const [ key, value ] of Object.entries(users)) {
+    for (const [key, value] of Object.entries(users)) {
       if (value === socket) {
         delete users[key];
       }

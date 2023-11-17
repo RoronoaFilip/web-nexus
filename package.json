@@ -4,6 +4,8 @@
   "description": "A Webpack Packaged Library that utilizes a Node.js Backend API that allows you to easily integrate complex Functionalities in your website",
   "main": "app.js",
   "scripts": {
+    "serve": "npm run package && npm run start",
+    "serve.dev": "npm run package.dev && npm run start",
     "start": "node src/app.js",
     "package": "webpack --mode production",
     "package.dev": "webpack --mode development",

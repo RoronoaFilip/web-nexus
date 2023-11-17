@@ -1,4 +1,4 @@
-const io = require('socket.io-client')
+const io = require('socket.io-client');
 let socket;
 let username;
 let chatsDivId;
@@ -8,7 +8,7 @@ function setUpSocketCommunication(recipient) {
     let chatMessages = document.getElementById('chatMessages' + recipient);
 
     if (!chatMessages) {
-      fetchChatBox(chatsDivId, recipient).then((body) => {
+      fetchChatBox(chatsDivId, recipient).then(() => {
         chatMessages = chatMessages || document.getElementById('chatMessages' + recipient);
         chatMessages && chatMessages.appendChild(messageDiv);
       });
@@ -57,20 +57,21 @@ function addUserOnline(username, password) {
 
   // fetch post request for login and auth
   socket.emit('store user', username);
+  console.log(password);
 }
 
 function fetchChatBox(divId, recipient) {
   return fetch('http://localhost:8080/chat', {
-    method: "POST",
+    method: 'POST',
     headers: {
-      'Content-type': 'application/json'
+      'Content-type': 'application/json',
     },
     body: JSON.stringify({
-      name: recipient
-    })
+      name: recipient,
+    }),
   })
-      .then(result => result.text())
-      .then(body => {
+      .then((result) => result.text())
+      .then((body) => {
         const chatBoxDiv = document.createElement('div');
         chatBoxDiv.innerHTML = body;
         document.getElementById(divId).appendChild(chatBoxDiv);
@@ -83,4 +84,4 @@ function createChatBox(divId, recipient) {
   fetchChatBox(divId, recipient).then();
 }
 
-module.exports = {createChatBox, addUserOnline}
+module.exports = {createChatBox, addUserOnline};

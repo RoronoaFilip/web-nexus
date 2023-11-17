@@ -1,6 +1,6 @@
-import { Transform } from "stream";
-import fs from "fs";
-import { transformText } from "./transform_text";
+const stream = require('stream');
+const fs = require('fs');
+const {transformText} = require('./transform_text');
 
 /**
  * Creates a transform stream that replaces all instances
@@ -12,58 +12,58 @@ import { transformText } from "./transform_text";
  * @returns a Transform stream
  */
 function createTransformStream(pageName, replacementMap) {
-    const transformStream = new Transform({
-        encoding: 'utf8',
-        buffer: '',
-        transform(chunk, encoding, cb) {
-            const chunkString = chunk.toString();
-            this.buffer = (this.buffer || '') + chunkString;
+  const transformStream = new stream.Transform({
+    encoding: 'utf8',
+    buffer: '',
+    transform(chunk, encoding, cb) {
+      const chunkString = chunk.toString();
+      this.buffer = (this.buffer || '') + chunkString;
 
-            if (this.buffer.includes('<style>')) {
-                this.handleCssFile(cb);
-            } else if (this.buffer.includes('\n')) {
-                const lines = this.buffer.split('\n');
-                this.buffer = lines.pop();
+      if (this.buffer.includes('<style>')) {
+        this.handleCssFile(cb);
+      } else if (this.buffer.includes('\n')) {
+        const lines = this.buffer.split('\n');
+        this.buffer = lines.pop();
 
-                for (const i in lines) {
-                    this.push(transformText(replacementMap, lines[i]) + '\n');
-                }
-
-                return cb();
-            } else {
-                return cb();
-            }
-        },
-        flush(cb) {
-            if (this.buffer) {
-                const transformedLine = transformText(replacementMap, this.buffer);
-                this.push(transformedLine);
-            }
-            replacementMap = {};
-            return cb();
+        for (const i in lines) {
+          this.push(transformText(replacementMap, lines[i]) + '\n');
         }
-    });
 
-    transformStream.handleCssFile = function handleCssFile(cb) {
-        let splitBuffer = this.buffer.split('<style>');
-        this.push(splitBuffer[0] + '<style>');
+        return cb();
+      } else {
+        return cb();
+      }
+    },
+    flush(cb) {
+      if (this.buffer) {
+        const transformedLine = transformText(replacementMap, this.buffer);
+        this.push(transformedLine);
+      }
+      replacementMap = {};
+      return cb();
+    }
+  });
 
-        let transformStream = this;
-        const cssStream = fs.createReadStream('pages/main.css',
-            {highWaterMark: 1024, encoding: 'utf8'})
-            .on('data', function readChunk(chunk) {
-                transformStream.push(chunk);
-            })
-            .on('end', function callCb() {
-                cb();
-            });
+  transformStream.handleCssFile = function handleCssFile(cb) {
+    let splitBuffer = this.buffer.split('<style>');
+    this.push(splitBuffer[0] + '<style>');
 
-        this.buffer = splitBuffer[1] || '';
-    };
+    let transformStream = this;
+    fs.createReadStream('pages/main.css',
+        {highWaterMark: 1024, encoding: 'utf8'})
+        .on('data', function readChunk(chunk) {
+          transformStream.push(chunk);
+        })
+        .on('end', function callCb() {
+          cb();
+        });
 
-    transformStream.cssFilePath = `./pages/${pageName}.css`;
+    this.buffer = splitBuffer[1] || '';
+  };
 
-    return transformStream;
+  transformStream.cssFilePath = `./pages/${pageName}.css`;
+
+  return transformStream;
 }
 
 module.exports = {createTransformStream}
