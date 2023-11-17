@@ -1,4 +1,4 @@
-const {Transform} = require('stream');
+const stream = require('stream');
 const {transformText} = require('./transform_text');
 
 /**
@@ -10,7 +10,7 @@ const {transformText} = require('./transform_text');
  */
 function createTransformStream(replacementMap) {
   replacementMap = replacementMap || {};
-  return new Transform({
+  return new stream.Transform({
     encoding: 'utf8',
     buffer: '',
     transform(chunk, encoding, cb) {

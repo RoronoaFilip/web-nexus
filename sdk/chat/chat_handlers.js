@@ -3,6 +3,13 @@ let socket;
 let currentUser;
 let chatsContainerDivId;
 
+/**
+ * Append a message to the chat box of a recipient.
+ * The chat box is determined by the name of the recipient.
+ * The chat box is created if it does not exist.
+ * @param messageDiv
+ * @param recipient
+ */
 function appendMessage(messageDiv, recipient) {
   let chatMessages = document.getElementById('chatMessages' + recipient);
 
@@ -18,6 +25,10 @@ function appendMessage(messageDiv, recipient) {
   }
 }
 
+/**
+ * Set up socket listeners for chat box form for sending messages and closing the chat box
+ * @param recipient
+ */
 function setUpSocketCommunication(recipient) {
   // Send a private message
   document.getElementById('formSubmit' + recipient).addEventListener('submit', function (e) {
@@ -49,6 +60,10 @@ function setUpSocketCommunication(recipient) {
   });
 }
 
+/**
+ * Set up socket listeners for receiving messages
+ * @param socket - The socket to listen on
+ */
 function setUpReceive(socket) {
   // Receive private messages
   socket.on('receive private message', function (data) {
@@ -63,18 +78,6 @@ function setUpReceive(socket) {
   socket.on('private message error', function (error) {
     alert(error);
   });
-}
-
-function addUserOnline(username, password) {
-  socket = io('http://localhost:8081');
-
-  currentUser = username;
-  console.log(password);
-
-  // fetch post request for login and auth
-  socket.emit('store user', username);
-
-  setUpReceive(socket);
 }
 
 function fetchChatBox(recipient) {
@@ -95,6 +98,18 @@ function fetchChatBox(recipient) {
         setUpSocketCommunication(recipient);
         return body;
       });
+}
+
+function addUserOnline(username, password) {
+  socket = io('http://localhost:8081');
+
+  currentUser = username;
+  console.log(password);
+
+  // fetch post request for login and auth
+  socket.emit('store user', username);
+
+  setUpReceive(socket);
 }
 
 function createChatBox(recipient) {

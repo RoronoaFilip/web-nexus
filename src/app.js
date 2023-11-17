@@ -5,6 +5,7 @@ const {createFileReadStream} = require('./utils/file_read_stream');
 const {createTransformStream} = require('./utils/file_transform');
 const {responseHandlers} = require('./utils/response_handlers');
 const http = require('http');
+const config = require('./config');
 
 
 const app = express();
@@ -14,25 +15,26 @@ const io = new socketIO.Server(server, {
     origin: '*',
   },
 });
-const port = 8080;
-const socketPort = 8081;
 
-app.listen(port, () => {
+app.listen(config.httpPort, () => {
   console.log('Server is listening on 8080');
 });
-server.listen(socketPort, () => {
-  console.log(`Socker Server is running on http://localhost:${socketPort}`);
+server.listen(config.socketPort, () => {
+  console.log(`Socket Server is running on ${config.socketPort}`);
 });
 
 app.use(cors());
 app.use(express.json());
 app.use(express.raw());
 
-app.get('/sdk', function(req, res) {
+/**
+ * Fetch the SDK
+ */
+app.get('/sdk', function (req, res) {
   const filePath = '../dist/bundle.js';
 
   const readStream = createFileReadStream(filePath)
-      .on('error', function(err) {
+      .on('error', function (err) {
         responseHandlers.internalServer(req, res, true);
       });
 
@@ -44,10 +46,17 @@ app.get('/sdk', function(req, res) {
 // Store user information and socket IDs
 const users = {};
 
+/**
+ * Fetch the Login Form
+ */
 app.get('/login-form', (req, res) => {
   res.sendFile(__dirname + '/pages/login-form.html');
 });
 
+/**
+ * Fetch the Chat Box. Replaces all instances of {{name}} with the name.
+ * Notice the IDs of all HTML elements. These are used by the SDK to Determine in whose chat box to append the message.
+ */
 app.post('/chat', (req, res) => {
   const replacementMap = {
     name: req.body.name,
@@ -56,13 +65,23 @@ app.post('/chat', (req, res) => {
   const readStream = createFileReadStream(__dirname + '/pages/chat_box.html');
   const transformStream = createTransformStream(replacementMap);
 
+  readStream.on('error', function (err) {
+    responseHandlers.internalServer(req, res, true);
+  });
+
+  transformStream.on('error', function (err) {
+    responseHandlers.internalServer(req, res, true);
+  });
+
   readStream.pipe(transformStream).pipe(res);
 });
 
 io.on('connection', (socket) => {
-  console.log('A user connected');
+  console.log(`A user connected. Socket ID: ${socket.id}`);
 
-  // Handle private messages
+  /**
+   * Handle private messages on send. Emits receive to the recipient or private message error to the sender.
+   */
   socket.on('send private message', (data) => {
     const {to, message, from} = data;
     const toSocket = users[to];
@@ -82,7 +101,7 @@ io.on('connection', (socket) => {
   // Handle disconnect
   socket.on('disconnect', () => {
     // Remove user information on disconnect
-    for (const [key, value] of Object.entries(users)) {
+    for (const [ key, value ] of Object.entries(users)) {
       if (value === socket) {
         delete users[key];
       }
