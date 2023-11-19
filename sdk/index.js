@@ -9,4 +9,3 @@ const sdk = {
 
 
 window.sdk = sdk;
-module.exports = sdk;

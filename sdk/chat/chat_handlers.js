@@ -1,7 +1,10 @@
 const io = require('socket.io-client');
-let socket;
-let currentUser;
-let chatsContainerDivId;
+
+const config = {
+  socket: undefined,
+  currentUser: undefined,
+  chatsContainerDivId: undefined,
+}
 
 /**
  * Append a message to the chat box of a recipient.
@@ -45,11 +48,11 @@ function setUpSocketCommunication(recipient) {
       messageInput.value = '';
       messageInput.focus();
 
-      if (currentUser === recipient) {
+      if (config.currentUser === recipient) {
         return; // We have messaged ourselves
       }
 
-      socket.emit('send private message', {from: currentUser, to, message});
+      config.socket.emit('send private message', {from: config.currentUser, to, message});
     }
   });
 
@@ -94,22 +97,22 @@ function fetchChatBox(recipient) {
       .then((body) => {
         const chatBoxDiv = document.createElement('div');
         chatBoxDiv.innerHTML = body;
-        document.getElementById(chatsContainerDivId).appendChild(chatBoxDiv);
+        document.getElementById(config.chatsContainerDivId).appendChild(chatBoxDiv);
         setUpSocketCommunication(recipient);
         return body;
       });
 }
 
 function addUserOnline(username, password) {
-  socket = io('http://localhost:8081');
+  config.socket = io('http://localhost:8081');
 
-  currentUser = username;
+  config.currentUser = username;
   console.log(password);
 
   // fetch post request for login and auth
-  socket.emit('store user', username);
+  config.socket.emit('store user', username);
 
-  setUpReceive(socket);
+  setUpReceive(config.socket);
 }
 
 function createChatBox(recipient) {
@@ -117,7 +120,7 @@ function createChatBox(recipient) {
 }
 
 function setChatBoxDivId(divId) {
-  chatsContainerDivId = divId;
+  config.chatsContainerDivId = divId;
 }
 
 module.exports = {createChatBox, addUserOnline, setChatBoxDivId};

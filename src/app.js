@@ -17,10 +17,10 @@ const io = new socketIO.Server(server, {
 });
 
 app.listen(config.httpPort, () => {
-  console.log('Server is listening on 8080');
+  console.log(`Server is listening on :${config.httpPort}`);
 });
 server.listen(config.socketPort, () => {
-  console.log(`Socket Server is running on ${config.socketPort}`);
+  console.log(`Socket Server is running on :${config.socketPort}`);
 });
 
 app.use(cors());
@@ -34,9 +34,10 @@ app.get('/sdk', function (req, res) {
   const filePath = '../dist/bundle.js';
 
   const readStream = createFileReadStream(filePath)
-      .on('error', function (err) {
-        responseHandlers.internalServer(req, res, true);
-      });
+      .on('error', () => {
+            responseHandlers.internalServer(req, res, true);
+          }
+      );
 
   res.setHeader('Content-Type', 'application/javascript');
 
@@ -65,12 +66,14 @@ app.post('/chat', (req, res) => {
   const readStream = createFileReadStream(__dirname + '/pages/chat_box.html');
   const transformStream = createTransformStream(replacementMap);
 
-  readStream.on('error', function (err) {
-    responseHandlers.internalServer(req, res, true);
+  readStream.on('error', (err) => {
+    responseHandlers.internalServer(req, res);
+    res.send(err);
   });
 
-  transformStream.on('error', function (err) {
-    responseHandlers.internalServer(req, res, true);
+  transformStream.on('error', (err) => {
+    responseHandlers.internalServer(req, res);
+    res.send(err);
   });
 
   readStream.pipe(transformStream).pipe(res);
@@ -103,9 +106,9 @@ io.on('connection', (socket) => {
     // Remove user information on disconnect
     for (const [ key, value ] of Object.entries(users)) {
       if (value === socket) {
+        console.log(`User with Username: ${key} has disconnected`);
         delete users[key];
       }
     }
-    console.log('User disconnected');
   });
 });
