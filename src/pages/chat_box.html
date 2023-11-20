@@ -1,0 +1,95 @@
+<style>
+    /* Your existing styles */
+
+    .chat-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 300px;
+        height: 500px;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+    }
+
+    .chat-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: #3498db;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .chat-messages {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 10px;
+        height: 100%;
+        overflow-y: scroll;
+    }
+
+    .message {
+        max-width: 70%;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        padding: 8px;
+
+        &.received-message {
+            background-color: #e1e1e1;
+            align-self: flex-start;
+        }
+        &.sent-message {
+            background-color: #3498db;
+            color: #fff;
+            align-self: flex-end;
+        }
+    }
+
+    .chat-input-send-button-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+    }
+
+    .message-input {
+        width: calc(100% - 20px);
+        margin: 0 10px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+    }
+
+    .send-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .close-button {
+        cursor: pointer;
+    }
+</style>
+
+<div class="chat-box" id="chatBox{{name}}">
+    <div class="chat-header">Chat with {{name}}
+        <button class="close-button" id="close-button{{name}}">X</button>
+    </div>
+    <div class="chat-messages" id="chatMessages{{name}}">
+        <!-- Messages will be added here dynamically -->
+    </div>
+    <form class="chat-input-send-button-wrapper" id="formSubmit{{name}}">
+        <input type="text" class="message-input" id="messageInput{{name}}" placeholder="Type your message...">
+        <button class="send-button" id="send-message-button{{name}}">Send</button>
+    </form>
+</div>
