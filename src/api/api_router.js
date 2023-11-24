@@ -1,5 +1,5 @@
 const apiRouter = require('express').Router();
-const chatRouter = require('./chat/chat-router');
+const chatRouter = require('./chat/chat_router');
 const loginFormRouter = require('./login_form/login_form_router');
 const sdkRouter = require('./sdk/sdk_router');
 
