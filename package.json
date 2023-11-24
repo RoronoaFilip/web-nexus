@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "package": "webpack --mode production",
-    "package.dev": "webpack --mode development",
+    "package": "webpack --mode production --config ./webpack.config.js",
+    "package.dev": "webpack --mode development --config ./webpack.config.js",
     "lint": "eslint --config .eslintrc.json .",
     "lint.fix": "eslint --config .eslintrc.json --fix ."
   },
