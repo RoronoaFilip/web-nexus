@@ -1,5 +1,7 @@
 const {addUserOnline} = require('../chat/chat_handlers');
 
+const loginFormUrl = 'http://localhost:8080/api/login-form';
+
 function setUpLoginForm() {
   const loginForm = document.getElementById('sdk-login-form');
 
@@ -17,7 +19,7 @@ function setUpLoginForm() {
 }
 
 function createLoginForm(divId = undefined) {
-  fetch('http://localhost:8080/login-form')
+  fetch(loginFormUrl)
       .then((result) => result.text())
       .then((body) => {
         if (divId) {

@@ -6,6 +6,9 @@ const config = {
   chatsContainerDivId: undefined,
 }
 
+const socketUrl = 'http://localhost:8081';
+const chatUrl = 'http://localhost:8080/api/chat';
+
 /**
  * Append a message to the chat box of a recipient.
  * The chat box is determined by the name of the recipient.
@@ -84,7 +87,7 @@ function setUpReceive(socket) {
 }
 
 function fetchChatBox(recipient) {
-  return fetch('http://localhost:8080/chat', {
+  return fetch(chatUrl, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
@@ -104,7 +107,7 @@ function fetchChatBox(recipient) {
 }
 
 function addUserOnline(username, password) {
-  config.socket = io('http://localhost:8081');
+  config.socket = io(socketUrl);
 
   config.currentUser = username;
   console.log(password);
