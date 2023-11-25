@@ -1,4 +1,3 @@
-const fs = require('fs');
 const {responseHandlers} = require("../../utils/response_handlers");
 const {createFileReadStream} = require("../../utils/file_streams/file_read_stream");
 const router = require('express').Router();
