@@ -4,7 +4,7 @@ const {createFileReadStream} = require("../../utils/file_streams/file_read_strea
 const router = require('express').Router();
 
 /**
- * Fetch the SDK
+ * Fetch the WebNexus SDK
  */
 router.get('/', function (req, res) {
   const filePath = __dirname + '/../../../dist/bundle.js';

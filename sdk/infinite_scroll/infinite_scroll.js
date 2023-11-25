@@ -1,7 +1,10 @@
+const urlRegex = /^https:\/\/(?:www\.)?([\w\d-]+\.)+(com|org|bg)(?:\/[\w\d-]+)*(?:[?&]([^%^&*$#@!?\s]+=[^%^&*$#@!?\s]*))*$/;
+const rawDivRegex = /^\s*[\w\W]*<div[\w\W]*>[\w\W]*<\/div>\s*$/;
+const divStylingRegex = /^\s*<style>[\w\W]*<\/style>\s*$/;
+
 let config = {
   divId: '',
   rawDiv: '',
-  replacementMap: {},
   beforeLoad: () => {
   },
   afterLoad: () => {
@@ -13,11 +16,13 @@ let requestConfig = {
   method: '',
   body: {},
   headers: {},
+  replacementMap: {},
 };
 
 const configResponse = {
   before,
-  after
+  after,
+  load,
 };
 
 let isLoading = false;
@@ -29,37 +34,46 @@ class Error {
 }
 
 function before(cb) {
-  // cb({url, method, headers, body});
   config.beforeLoad = cb;
 
   return configResponse;
 }
 
 function after(cb) {
-  // cb({url, method, headers, body});
   config.afterLoad = cb;
 
   return configResponse;
 }
 
+function load() {
+  loadMoreContent();
+}
+
 function validateConfiguration(config, requestConfig) {
   const errors = [];
 
-  if (!config.rawDiv || !config.rawDiv.match(/^(<style>[\w\W]*<\/style>)?[\w\W]*<div[\w\W]*>[\w\W]*<\/div>$/)) {
+  if (!config.rawDiv || !config.rawDiv.match(rawDivRegex)) {
     errors.push(new Error('Invalid Raw Div'));
   }
 
-  if (!requestConfig.url) {
+  if (!config.divStyling || !config.divStyling.match(divStylingRegex)) {
+    errors.push(new Error('Invalid Raw Div'));
+  }
+
+  if (requestConfig.url && !requestConfig.url.match(urlRegex)) {
     errors.push(new Error('Invalid URL'));
   }
 
   return errors;
 }
 
-function configureInfiniteScroll(divId, rawDiv, replacementMap, url, method, headers, body = null) {
+function configureInfiniteScroll(
+    divId, rawDiv, divStyling,
+    replacementMap = null, url = null, method = null, headers = null, body = null
+) {
   return new Promise((resolve, reject) => {
-    config = {divId, rawDiv, replacementMap};
-    requestConfig = {url, method, headers, body};
+    config = {divId, rawDiv, divStyling};
+    requestConfig = {replacementMap, url, method, headers, body};
 
     const errors = validateConfiguration(config, requestConfig);
 
@@ -67,6 +81,8 @@ function configureInfiniteScroll(divId, rawDiv, replacementMap, url, method, hea
       reject(errors);
       return;
     }
+
+    document.getElementById(divId).innerHTML += divStyling;
 
     window.addEventListener('scroll', () => {
       const {scrollTop, scrollHeight, clientHeight} = document.documentElement;
@@ -78,8 +94,6 @@ function configureInfiniteScroll(divId, rawDiv, replacementMap, url, method, hea
     });
 
     resolve(configResponse);
-
-    loadMoreContent();
   });
 }
 
@@ -95,21 +109,20 @@ function loadMoreContent() {
   isLoading = true;
 
   if (config.beforeLoad) {
-    setTimeout(() => {
-      config.beforeLoad(requestConfig);
-    });
+    config.beforeLoad(requestConfig);
   }
 
   fetch(requestConfig.url, {
     method: requestConfig.method.toUpperCase(),
-    headers: requestConfig.headers,
+    headers: requestConfig.headers || {'Accept': 'application/json'},
     body: requestConfig.body && JSON.stringify(requestConfig.body),
-  }).then(response => response.json())
+  })
+      .then(response => response.json())
       .then(body => {
         if (Array.isArray(body)) {
-          handleArray(body);
+          handleArray(body, requestConfig.replacementMap);
         } else if (typeof body === 'object') {
-          handleObject(body);
+          handleObject(body, requestConfig.replacementMap);
         }
       })
       .catch(err => console.error(err))
@@ -121,37 +134,37 @@ function loadMoreContent() {
       });
 }
 
-function handleKey(key, value, rawDiv) {
-  const shouldReplace = config.replacementMap[key];
+function handleKey(key, value, replacementMap, rawDiv) {
+  const replacementMapElement = replacementMap[key];
 
-  if (!shouldReplace) {
+  if (!replacementMapElement) {
     return rawDiv;
   }
 
-  if (shouldReplace === true) {
+  if (replacementMapElement === true) {
     rawDiv = rawDiv.replace('{{' + key + '}}', value);
   } else if (Array.isArray(value)) {
-    handleArray(value, rawDiv);
+    handleArray(value, replacementMapElement);
   } else if (typeof value === 'object') {
-    rawDiv = handleObject(value);
+    rawDiv = handleObject(value, replacementMapElement);
   }
 
   return rawDiv;
 }
 
-function handleObject(obj) {
+function handleObject(obj, replacementMap) {
   let rawDiv = config.rawDiv;
 
   for (const key in obj) {
-    rawDiv = handleKey(key, obj[key], rawDiv);
+    rawDiv = handleKey(key, obj[key], replacementMap, rawDiv);
   }
   return rawDiv;
 }
 
-function handleArray(arr) {
+function handleArray(arr, replacementMap) {
   for (const item of arr) {
     if (typeof item === 'object') {
-      const rawDiv = handleObject(item);
+      const rawDiv = handleObject(item, replacementMap);
 
       if (rawDiv !== config.rawDiv) {
         appendNewsBox(rawDiv);
