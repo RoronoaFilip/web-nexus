@@ -3,13 +3,13 @@ const {addUserOnline} = require('../chat/chat_handlers');
 const loginFormUrl = 'http://localhost:8080/api/login-form';
 
 function setUpLoginForm() {
-  const loginForm = document.getElementById('sdk-login-form');
+  const loginForm = document.getElementById('web-nexus-login-form');
 
   loginForm.addEventListener('submit', function() {
-    const username = document.getElementById('sdk-username-input')
+    const username = document.getElementById('web-nexus-username-input')
         .value.trim();
 
-    const password = document.getElementById('sdk-password-input')
+    const password = document.getElementById('web-nexus-password-input')
         .value.trim();
 
     loginForm.parentElement.remove();

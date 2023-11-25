@@ -5,7 +5,7 @@ const router = require('express').Router();
 
 /**
  * Fetch the Chat Box. Replaces all instances of {{name}} with the name.
- * Notice the IDs of all HTML elements. These are used by the SDK to Determine in whose chat box to append the message.
+ * Notice the IDs of all HTML elements. These are used by the WebNexus SDK to Determine in whose chat box to append the message.
  */
 router.post('/', (req, res) => {
   const replacementMap = {
