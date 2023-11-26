@@ -86,8 +86,11 @@ Note that sometimes it requires __sudo__ in front of the command.
 
 ## Versions
 
+### Version 1.3.1
+- Move Config Files to a Config Directory.
+
 ### Version 1.3.0
-- Addes Postgress DB Dockerfile and docker-compose
+- Addes Postgress DB Dockerfile and docker-compose.
 
 ### Version 1.2.0
 - Restructured the Directory Hierarchy.
@@ -95,7 +98,7 @@ Note that sometimes it requires __sudo__ in front of the command.
 - Added Initial Version of the Infinite Scroll Functionality.
 
 ### Version 1.1.0
-- Added Live Chat Functionality
+- Added Live Chat Functionality.
 
 ### Version 1.0.0
-- Initial commit
+- Initial commit.
