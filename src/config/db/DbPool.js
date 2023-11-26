@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const config = require('../src/config.json');
+const config = require('../config.json');
 const dbPool = new Pool({
     host: 'localhost',
     port: config.dbPostgresPort,
