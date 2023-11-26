@@ -1,0 +1,6 @@
+Use Symbols for on and emit in the sockets.
+Think of a way to validate requests to the server.
+Think of a way to validate all messages in the chat.
+Think of a way to show a User that has just logged in all the messages that were sent while he was offline.
+
+NewsAPI Key = 0c82ee1bf5624136bf6cec6b3b763395

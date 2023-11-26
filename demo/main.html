@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="main.css">
     <title>Welcome to Filip Filchev's Site</title>
-    <script src="http://localhost:8080/sdk"></script>
     <style>/* Global Styles */
     body {
         background-color: #5D3FD3;
@@ -82,16 +80,6 @@
     .section-list li {
         color: black;
         pointer-events: none;
-    }
-
-    /* Service Blocks */
-    .service-block {
-        background-color: #5D3FD3;
-        color: #fff;
-        text-align: center;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 10px 0;
     }
 
     .service-block h2 {
@@ -190,11 +178,12 @@
 <footer class="footer">
     <p>&copy; 2023 Filip Filchev's Site. All rights reserved.</p>
 </footer>
+<script src="http://localhost:8080/api/web-nexus"></script>
 <script>
-    sdk.setChatBoxDivId('chat-container')
-    sdk.createLoginForm();
+    webNexus.setChatBoxDivId('chat-container')
+    webNexus.createLoginForm();
     document.getElementById('new-chat-button').addEventListener('click', function () {
-        sdk.createChatBox(document.getElementById('chat-recipient-input').value.trim());
+        webNexus.createChatBox(document.getElementById('chat-recipient-input').value.trim());
     });
 </script>
 </body>

@@ -1,6 +1,6 @@
 const stream = require('stream');
 const fs = require('fs');
-const {transformText} = require('./transform_text');
+const {transformText} = require('../transform_text');
 
 /**
  * Creates a transform stream that replaces all instances

@@ -52,6 +52,11 @@
 
 ## Versions
 
+### Version 1.2.0
+- Restructured the Directory Hierarchy.
+- Added a Router Logic for the API.
+- Added Initial Version of the Infinite Scroll Functionality.
+
 ### Version 1.1.0
 - Added Live Chat Functionality
 

@@ -1,5 +1,5 @@
 const stream = require('stream');
-const {transformText} = require('./transform_text');
+const {transformText} = require('../transform_text');
 
 /**
  * Creates a Transform stream that replaces all instances of {{key}}
