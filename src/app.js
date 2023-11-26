@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const config = require('./config');
+const dbPool = require('../db/DbPool');
+
 const {configureSocketConnection} = require('./socket/configure_socket_connection');
 const apiRouter = require('./api/api_router');
 
