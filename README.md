@@ -86,6 +86,9 @@ Note that sometimes it requires __sudo__ in front of the command.
 
 ## Versions
 
+### Version 1.3.0
+- Addes Postgress DB Dockerfile and docker-compose
+
 ### Version 1.2.0
 - Restructured the Directory Hierarchy.
 - Added a Router Logic for the API.
