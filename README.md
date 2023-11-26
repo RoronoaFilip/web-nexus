@@ -49,6 +49,40 @@
 - Attaches event listeners to the elements.
 
 ---
+## How to run the Postgres Data Base
+
+### Requirements
+- [WSL](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview) If you are on Windows
+- Docker Engine
+- Docker Compose
+
+### Steps to run the __Docker Compose File__
+
+#### 1. Navigate to Project Directory
+```
+cd /path/to/your/project
+```
+
+#### 2. Run Docker Compose
+```
+docker compose up
+```
+
+If you want to run it in detached mode
+
+```
+docker compose up -d
+```
+
+#### 3. Verify Containers
+```
+docker ps
+```
+
+Note that sometimes it requires __sudo__ in front of the command.
+
+
+---
 
 ## Versions
 
