@@ -81,10 +81,54 @@ docker ps
 
 Note that sometimes it requires __sudo__ in front of the command.
 
+---
+
+## How to Make Migrations and Seeds
+
+#### 1. Migrations
+Open terminal and navigate to the __db__ folder
+```
+cd /src/config/db
+```
+Then type:
+```
+npx migrate:make <migration file name> --knexfile knexfile.js
+```
+
+#### 2. Seed
+Open terminal and navigate to the __db__ folder
+```
+cd /src/config/db
+```
+Then type:
+```
+npx seed:make <seed file name> --knexfile knexfile.js
+```
+
+#### 3.Execution
+
+In __package.json__ there are configured commands for both migrations and seeds. When you execute in terminal
+one of the following commands:
+
+```
+npm run migrate
+npm run seed
+```
+
+This instructs Knex to run the migration files that have not been executed yet. 
+It looks at the knex_migrations table in your database to determine which migrations 
+have been applied and which are pending, and it applies the pending migrations.
+
+Knex maintains a knex_seed table (or a table name specified in the configuration)
+in your database to track which seed files have been executed. When you run knex seed:run,
+it checks this table to determine which seeds have already been applied.
 
 ---
 
 ## Versions
+
+### Version 1.4.0
+- Add migrations and seeds with Knex.
 
 ### Version 1.3.1
 - Move Config Files to a Config Directory.

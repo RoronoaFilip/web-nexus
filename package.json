@@ -8,7 +8,9 @@
     "package": "webpack --mode production --config ./webpack.config.js",
     "package.dev": "webpack --mode development --config ./webpack.config.js",
     "lint": "eslint --config .eslintrc.json .",
-    "lint.fix": "eslint --config .eslintrc.json --fix ."
+    "lint.fix": "eslint --config .eslintrc.json --fix .",
+    "migrate": "knex migrate:latest --knexfile src/config/db/knexfile.js",
+    "seed": "knex seed:run --knexfile src/config/db/knexfile.js"
   },
   "repository": {
     "type": "git",
@@ -42,6 +44,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "knex": "^3.0.1",
     "pg": "^8.11.3",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2"
