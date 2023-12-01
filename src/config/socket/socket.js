@@ -22,10 +22,10 @@ function configureSocketConnection(server) {
      * Handle private messages on send. Emits receive to the recipient or private message error to the sender.
      */
     socket.on('send private message', (data) => {
-      const {to, message, from} = data;
+      const { to, message, from } = data;
       const toSocket = users[to];
       if (toSocket) {
-        toSocket.emit('receive private message', {from, message});
+        toSocket.emit('receive private message', { from, message });
       } else {
         // Handle user not found
         socket.emit('private message error', `User ${to} not found`);
@@ -52,4 +52,4 @@ function configureSocketConnection(server) {
   return io;
 }
 
-module.exports = {configureSocketConnection};
+module.exports = { configureSocketConnection };

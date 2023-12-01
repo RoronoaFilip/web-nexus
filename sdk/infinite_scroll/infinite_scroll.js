@@ -86,12 +86,12 @@ function validateConfiguration(config, requestConfig) {
  * @returns the ConfigResponse Object for setting the before and after callbacks
  */
 function configureInfiniteScroll(
-    divId, rawDiv, divStyling,
-    replacementMap = null, url = null, method = null, headers = null, body = null
+  divId, rawDiv, divStyling,
+  replacementMap = null, url = null, method = null, headers = null, body = null
 ) {
   return new Promise((resolve, reject) => {
-    config = {divId, rawDiv, divStyling};
-    requestConfig = {replacementMap, url, method, headers, body};
+    config = { divId, rawDiv, divStyling };
+    requestConfig = { replacementMap, url, method, headers, body };
 
     const errors = validateConfiguration(config, requestConfig);
 
@@ -103,7 +103,7 @@ function configureInfiniteScroll(
     document.getElementById(divId).innerHTML += divStyling;
 
     window.addEventListener('scroll', () => {
-      const {scrollTop, scrollHeight, clientHeight} = document.documentElement;
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
       // Check if the user has scrolled to the bottom
       if (scrollTop + clientHeight >= scrollHeight - 100) {
@@ -233,24 +233,24 @@ function loadMoreContent() {
 
   fetch(requestConfig.url, {
     method: requestConfig.method.toUpperCase(),
-    headers: requestConfig.headers || {'Accept': 'application/json'},
+    headers: requestConfig.headers || { 'Accept': 'application/json' },
     body: requestConfig.body && JSON.stringify(requestConfig.body),
   })
-      .then(response => response.json())
-      .then(body => {
-        if (Array.isArray(body)) {
-          handleArray(body, requestConfig.replacementMap);
-        } else if (typeof body === 'object') {
-          handleObject(body, requestConfig.replacementMap);
-        }
-      })
-      .catch(err => console.error(err))
-      .finally(() => {
-        isLoading = false;
-        if (config.afterLoad) {
-          config.afterLoad(requestConfig);
-        }
-      });
+    .then(response => response.json())
+    .then(body => {
+      if (Array.isArray(body)) {
+        handleArray(body, requestConfig.replacementMap);
+      } else if (typeof body === 'object') {
+        handleObject(body, requestConfig.replacementMap);
+      }
+    })
+    .catch(err => console.error(err))
+    .finally(() => {
+      isLoading = false;
+      if (config.afterLoad) {
+        config.afterLoad(requestConfig);
+      }
+    });
 }
 
-module.exports = {configureInfiniteScroll};
+module.exports = { configureInfiniteScroll };

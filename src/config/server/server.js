@@ -28,4 +28,4 @@ server.listen(config.socketPort, () => {
 });
 
 
-module.exports = {app, server};
+module.exports = { app, server };
