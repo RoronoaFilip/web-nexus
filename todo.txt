@@ -8,3 +8,18 @@ NewsAPI Key = 0c82ee1bf5624136bf6cec6b3b763395
 01.12.23 - Filip
   - Maybe export the DB Host to config.json
   - Decorate the controllers to check every Request for authorization.
+
+01.12.24 - All
+ - Investigate how to load a whole Chat, and how do save it in the DB.
+
+01.12.24 - Filip
+  - Finish v2 of Infinite Scroll
+  - Add auth to every chat message
+  - Infinite Scroll for the Chat.
+
+01.12.24 - Alex
+  - Auth for every endpoint.
+  - Add middleware for extracting the Authorization header
+  - Do not do it for login and register endpoints.
+  - Investigate Redis and Caching of things, maybe pagination.
+  - A whole Chat Page like in messenger. Who is Online?
