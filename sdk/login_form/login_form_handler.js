@@ -1,4 +1,4 @@
-const {addUserOnline} = require('../chat/chat_handlers');
+const { addUserOnline } = require('../chat/chat_handlers');
 
 const loginFormUrl = 'http://localhost:8080/api/login-form';
 
@@ -7,10 +7,10 @@ function setUpLoginForm() {
 
   loginForm.addEventListener('submit', function() {
     const username = document.getElementById('web-nexus-username-input')
-        .value.trim();
+      .value.trim();
 
     const password = document.getElementById('web-nexus-password-input')
-        .value.trim();
+      .value.trim();
 
     loginForm.parentElement.remove();
 
@@ -20,18 +20,18 @@ function setUpLoginForm() {
 
 function createLoginForm(divId = undefined) {
   fetch(loginFormUrl)
-      .then((result) => result.text())
-      .then((body) => {
-        if (divId) {
-          document.getElementById(divId).innerHTML = body;
-        } else {
-          const loginFormDiv = document.createElement('div');
-          loginFormDiv.innerHTML = body;
-          document.body.insertBefore(loginFormDiv, document.body.firstChild);
-        }
+    .then((result) => result.text())
+    .then((body) => {
+      if (divId) {
+        document.getElementById(divId).innerHTML = body;
+      } else {
+        const loginFormDiv = document.createElement('div');
+        loginFormDiv.innerHTML = body;
+        document.body.insertBefore(loginFormDiv, document.body.firstChild);
+      }
 
-        setUpLoginForm();
-      });
+      setUpLoginForm();
+    });
 }
 
-module.exports = {createLoginForm};
+module.exports = { createLoginForm };

@@ -6,7 +6,7 @@ const fs = require('fs');
  * @return {ReadStream} - the ReadStream for the File
  */
 function createFileReadStream(path) {
-  return fs.createReadStream(path, {encoding: 'utf-8', highWaterMark: 1024});
+  return fs.createReadStream(path, { encoding: 'utf-8', highWaterMark: 1024 });
 }
 
-module.exports = {createFileReadStream};
+module.exports = { createFileReadStream };

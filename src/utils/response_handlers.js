@@ -66,4 +66,4 @@ function handle500(req, res, end = false) {
   }
 }
 
-module.exports = {responseCodes, responseMessages, responseHandlers};
+module.exports = { responseCodes, responseMessages, responseHandlers };

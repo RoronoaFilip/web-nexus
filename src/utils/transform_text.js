@@ -13,4 +13,4 @@ function transformText(replacementMap, targetString) {
   return targetString;
 }
 
-module.exports = {transformText};
+module.exports = { transformText };

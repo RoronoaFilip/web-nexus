@@ -4,3 +4,7 @@ Think of a way to validate all messages in the chat.
 Think of a way to show a User that has just logged in all the messages that were sent while he was offline.
 
 NewsAPI Key = 0c82ee1bf5624136bf6cec6b3b763395
+
+01.12.23 - Filip
+  - Maybe export the DB Host to config.json
+  - Decorate the controllers to check every Request for authorization.

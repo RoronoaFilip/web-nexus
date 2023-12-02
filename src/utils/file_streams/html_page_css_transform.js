@@ -1,6 +1,6 @@
 const stream = require('stream');
 const fs = require('fs');
-const {transformText} = require('../transform_text');
+const { transformText } = require('../transform_text');
 
 /**
  * Creates a transform stream that replaces all instances
@@ -50,13 +50,13 @@ function createTransformStream(pageName, replacementMap) {
 
     let transformStream = this;
     fs.createReadStream('pages/main.css',
-        {highWaterMark: 1024, encoding: 'utf8'})
-        .on('data', function readChunk(chunk) {
-          transformStream.push(chunk);
-        })
-        .on('end', function callCb() {
-          cb();
-        });
+      { highWaterMark: 1024, encoding: 'utf8' })
+      .on('data', function readChunk(chunk) {
+        transformStream.push(chunk);
+      })
+      .on('end', function callCb() {
+        cb();
+      });
 
     this.buffer = splitBuffer[1] || '';
   };
@@ -66,4 +66,4 @@ function createTransformStream(pageName, replacementMap) {
   return transformStream;
 }
 
-module.exports = {createTransformStream}
+module.exports = { createTransformStream };

@@ -4,7 +4,7 @@ const config = {
   socket: undefined,
   currentUser: undefined,
   chatsContainerDivId: undefined,
-}
+};
 
 const socketUrl = 'http://localhost:8081';
 const chatUrl = 'http://localhost:8080/api/chat';
@@ -55,7 +55,7 @@ function setUpSocketCommunication(recipient) {
         return; // We have messaged ourselves
       }
 
-      config.socket.emit('send private message', {from: config.currentUser, to, message});
+      config.socket.emit('send private message', { from: config.currentUser, to, message });
     }
   });
 
@@ -73,7 +73,7 @@ function setUpSocketCommunication(recipient) {
 function setUpReceive(socket) {
   // Receive private messages
   socket.on('receive private message', function (data) {
-    const {from, message} = data;
+    const { from, message } = data;
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message received-message';
     messageDiv.textContent = message;
@@ -96,14 +96,14 @@ function fetchChatBox(recipient) {
       name: recipient,
     }),
   })
-      .then((result) => result.text())
-      .then((body) => {
-        const chatBoxDiv = document.createElement('div');
-        chatBoxDiv.innerHTML = body;
-        document.getElementById(config.chatsContainerDivId).appendChild(chatBoxDiv);
-        setUpSocketCommunication(recipient);
-        return body;
-      });
+    .then((result) => result.text())
+    .then((body) => {
+      const chatBoxDiv = document.createElement('div');
+      chatBoxDiv.innerHTML = body;
+      document.getElementById(config.chatsContainerDivId).appendChild(chatBoxDiv);
+      setUpSocketCommunication(recipient);
+      return body;
+    });
 }
 
 function addUserOnline(username, password) {
@@ -126,4 +126,4 @@ function setChatBoxDivId(divId) {
   config.chatsContainerDivId = divId;
 }
 
-module.exports = {createChatBox, addUserOnline, setChatBoxDivId};
+module.exports = { createChatBox, addUserOnline, setChatBoxDivId };
