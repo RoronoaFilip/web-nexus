@@ -1,5 +1,5 @@
-const { responseHandlers } = require("../../utils/response_handlers");
-const { createFileReadStream } = require("../../utils/file_streams/file_read_stream");
+const { responseHandlers } = require("../../core/utils/response_handlers");
+const { createFileReadStream } = require("../../core/utils/file_streams/file_read_stream");
 const router = require('express').Router();
 
 /**

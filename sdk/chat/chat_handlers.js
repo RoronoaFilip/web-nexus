@@ -106,6 +106,7 @@ function fetchChatBox(recipient) {
     });
 }
 
+// TODO should be fixed with email
 function addUserOnline(username, password) {
   config.socket = io(socketUrl);
 

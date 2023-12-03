@@ -180,11 +180,13 @@
 </footer>
 <script src="http://localhost:8080/api/web-nexus"></script>
 <script>
-  webNexus.setChatBoxDivId('chat-container')
-  webNexus.createLoginForm();
-  document.getElementById('new-chat-button').addEventListener('click', function () {
-    webNexus.createChatBox(document.getElementById('chat-recipient-input').value.trim());
-  });
+    const redirectUrl = 'http:localhost:8080/web-nexus/demo/demo-home-page/html';
+    webNexus.setChatBoxDivId('chat-container')
+    webNexus.createLoginForm(redirectUrl);
+    // webNexus.goToLoginForm(redirectUrl)
+    document.getElementById('new-chat-button').addEventListener('click', function () {
+        webNexus.createChatBox(document.getElementById('chat-recipient-input').value.trim());
+    });
 </script>
 </body>
 </html>
