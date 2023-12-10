@@ -14,14 +14,14 @@ function setUpLoginForm(redirectUrl) {
 
         const password = document.getElementById('web-nexus-password-input')
             .value.trim();
-        const hashedPassword = await bcrypt.hash(password, 12);
+        // const salt = bcrypt.genSaltSync(10);
+        // const hashedPassword = await bcrypt.hash(password, salt);
 
         loginForm.parentElement.remove();
 
-        login(email, hashedPassword)
-            .then(() => {
-                window.location.href = redirectUrl;
-                console.log('Successful login!');
+        login(email, password)
+            .then((data) => {
+                window.location.replace(data.redirectUrl);
                 // addUserOnline(email, hashedPassword);
             })
             .catch((errorHandler) => {
@@ -42,7 +42,7 @@ function createLoginForm(redirectUrl, divId = undefined) {
                 document.body.insertBefore(loginFormDiv, document.body.firstChild);
             }
 
-            setUpLoginForm();
+            setUpLoginForm(redirectUrl);
         });
 }
 
@@ -72,7 +72,7 @@ function login(email, password) {
                 }
                 if (response.status === 500) {
                     reject(() => {
-                        window.location.href = 'internal-server-error-page.html';
+                        window.location.href = 'http://localhost:63342/web-nexus/sdk/pages/internal-server-error-page.html';
                     })
                 }
                 if (!response.ok) {

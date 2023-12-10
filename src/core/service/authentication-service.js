@@ -13,8 +13,18 @@ async function getUser(email, password) {
 
         return user;
     } catch (error) {
-        console.log(`Error ${error}`);
+        throw error;
     }
 }
 
-module.exports = {getUser}
+async function register(firstName, lastName, email, password) {
+    try {
+        const result = await db
+            .insert([{email: email, password: password, first_name: firstName, last_name: lastName}])
+            .into('users');
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = {getUser, register}

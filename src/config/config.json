@@ -4,5 +4,6 @@
   "dbPostgresPort": 5432,
   "dbUsername": "web-nexus-db",
   "dbPassword": "mypassword",
-  "database": "webNexusDB"
+  "database": "webNexusDB",
+  "jwtSecretKey": "091c836baff0a450fefd68939315b98a"
 }
