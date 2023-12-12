@@ -1,0 +1,97 @@
+<style>
+    .register-container {
+        position: absolute;
+        left: 35%;
+        z-index: 100;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+    }
+
+    .register-container h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .register-form .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .register-form .form-group label {
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    .register-form .form-group input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+    }
+
+    .register-form .register-btn {
+        padding: 10px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .register-form .register-btn:hover {
+        background-color: #2980b9;
+    }
+
+    .register-form .login-form {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .register-form .login-form a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .register-form .login-form p {
+        font-weight: bold;
+    }
+
+</style>
+
+<div class="register-container">
+    <h2>Register Form</h2>
+    <form id="web-nexus-register-form" class="register-form">
+        <div class="form-group">
+            <label for="web-nexus-firstname-input">First Name:</label>
+            <input type="text" id="web-nexus-firstname-input" name="firstname" required>
+        </div>
+        <div class="form-group">
+            <label for="web-nexus-lastname-input">Last Name:</label>
+            <input type="text" id="web-nexus-lastname-input" name="lastname" required>
+        </div>
+        <div class="form-group">
+            <label for="web-nexus-email-input">Email:</label>
+            <input type="email" id="web-nexus-email-input" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="web-nexus-register-password-input">Password:</label>
+            <input type="password" id="web-nexus-register-password-input" name="password" required>
+        </div>
+        <button type="submit" class="register-btn">Register</button>
+        <div class="login-form">
+            <p>Already have an account? <a href="#" id="switch-to-login">Login</a></p>
+        </div>
+    </form>
+</div>
+

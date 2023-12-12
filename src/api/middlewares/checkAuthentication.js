@@ -1,20 +1,18 @@
 const jwt = require('jsonwebtoken');
-const config = require('../../config/config.json');
+const apiConfig = require('../../config/apiConfig.json');
 
 const checkAuthentication = (request, response, next) => {
     const token = request.cookies.access_token;
-
+    debugger;
     if (!token) {
         return response.status(401).json('No token found!');
     }
 
-    jwt.verify(token, config.jwtSecretKey, (error, userId) => {
+    jwt.verify(token, apiConfig.jwtSecretKey, (error, payload) => {
         if (error) {
             return response.status(403).json('Invalid token!');
         }
-        request.user = {
-            id: userId
-        }
+
 
         next();
     })

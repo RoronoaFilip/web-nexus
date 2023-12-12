@@ -14,8 +14,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use('/api', apiRouter);
-
-app.use(checkAuthentication);
+// app.use(checkAuthentication);
 
 /**
  * Heartbeat endpoint

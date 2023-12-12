@@ -111,7 +111,6 @@ function addUserOnline(username, password) {
   config.socket = io(socketUrl);
 
   config.currentUser = username;
-  console.log(password);
 
   // fetch post request for login and auth
   config.socket.emit('store user', username);

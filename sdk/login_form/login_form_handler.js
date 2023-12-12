@@ -1,13 +1,13 @@
 const {addUserOnline} = require('../chat/chat_handlers');
 const bcrypt = require('bcryptjs');
 
-const loginFormUrl = 'http://localhost:8080/api/authentication';
+const loginFormUrl = 'http://localhost:8080/api/authentication/get-login-form';
+const registerFormUrl = 'http://localhost:8080/api/authentication/get-register-form';
 const wrongCredentialsPage = 'http://localhost:8080/api/wrong-credentials-modal';
 const backendLoginEndpoint = 'http://localhost:8080/api/authentication/login'
 
 function setUpLoginForm(redirectUrl) {
-    const loginForm = document.getElementById('web-nexus-login-form');
-
+    const loginForm = document.getElementById('web-nexus-auth-form');
     loginForm.addEventListener('submit', async function () {
         const email = document.getElementById('web-nexus-username-input')
             .value.trim();
@@ -28,6 +28,18 @@ function setUpLoginForm(redirectUrl) {
                 errorHandler();
             })
     });
+
+    const registerFormLink = document.getElementById('switch-to-register');
+    registerFormLink.addEventListener('click', function () {
+        fetch(registerFormUrl)
+            .then((result) => result.text())
+            .then((body) => {
+                debugger;
+                const loginFormDiv = document.createElement('div');
+                loginFormDiv.innerHTML = body;
+                document.body.insertBefore(loginFormDiv, document.body.firstChild);
+            });
+    });
 }
 
 function createLoginForm(redirectUrl, divId = undefined) {
@@ -47,7 +59,7 @@ function createLoginForm(redirectUrl, divId = undefined) {
 }
 
 function goToLoginForm(redirectUrl) {
-    window.location.href = 'http:localhost:8080/web-nexus/src/pages/login_form.html';
+    window.location.href = '../../src/pages/login-form.html';
     setUpLoginForm();
 }
 
