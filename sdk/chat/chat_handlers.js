@@ -22,6 +22,12 @@ function appendMessage(messageDiv, recipient) {
   function append() {
     chatMessages = chatMessages || document.getElementById('chatMessages' + recipient);
     chatMessages && chatMessages.appendChild(messageDiv);
+
+    const firstMessage = chatMessages.lastChild;
+    // Scroll the first message into view
+    if (firstMessage) {
+      chatMessages.scrollTop = firstMessage.offsetTop;
+    }
   }
 
   if (!chatMessages) {
@@ -61,7 +67,7 @@ function setUpSocketCommunication(recipient) {
 
   document.getElementById('close-button' + recipient).addEventListener('click', function (e) {
     e.preventDefault();
-    const chatBox = document.getElementById('chatBox' + recipient);
+    const chatBox = document.getElementById('chatBox' + recipient).parentElement;
     chatBox.remove();
   });
 }
