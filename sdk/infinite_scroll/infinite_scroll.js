@@ -1,14 +1,7 @@
-const urlRegex = /^https:\/\/(?:www\.)?([\w\d-]+\.)+(com|org|bg)(?:\/[\w\d-]+)*(?:[?&]([^%^&*$#@!?\s]+=[^%^&*$#@!?\s]*))*$/;
-const rawDivRegex = /^\s*[\w\W]*<div[\w\W]*>[\w\W]*<\/div>\s*$/;
-const divStylingRegex = /^\s*<style>[\w\W]*<\/style>\s*$/;
+const common = require('./common');
 
-// The Configuration for the
-let config = {
-  divId: '',
-  rawDiv: '',
-  beforeLoad: undefined, // gets called before the request is made
-  afterLoad: undefined, // gets called after the request is made
-};
+const urlRegex = /^https:\/\/(?:www\.)?([\w-]+\.)+(com|org|bg)(?:\/[\w-]+)*(?:[?&]([^%^&*$#@!?\s]+=[^%^&*$#@!?\s]*))*$/;
+
 
 // The Configuration related to the Request for the Data
 let requestConfig = {
@@ -19,51 +12,11 @@ let requestConfig = {
   replacementMap: {},
 };
 
-// The Object that is returned by the setup (configuration) function
-const configResponse = {
-  before,
-  after,
-  load,
-};
-
-class Error {
-  constructor(message) {
-    this.message = message;
-  }
-}
-
-// set the callback before the request is made
-function before(cb) {
-  config.beforeLoad = cb;
-
-  return configResponse;
-}
-
-// set the callback after the request is made
-function after(cb) {
-  config.afterLoad = cb;
-
-  return configResponse;
-}
-
-// load initial content
-function load() {
-  loadMoreContent();
-}
-
 /**
  * Validation of the configuration
  */
 function validateConfiguration(config, requestConfig) {
-  const errors = [];
-
-  if (!config.rawDiv || !config.rawDiv.match(rawDivRegex)) {
-    errors.push(new Error('Invalid Raw Div'));
-  }
-
-  if (!config.divStyling || !config.divStyling.match(divStylingRegex)) {
-    errors.push(new Error('Invalid Raw Div'));
-  }
+  const errors = common.validateConfiguration(config);
 
   if (requestConfig.url && !requestConfig.url.match(urlRegex)) {
     errors.push(new Error('Invalid URL'));
@@ -90,10 +43,12 @@ function configureInfiniteScroll(
   replacementMap = null, url = null, method = null, headers = null, body = null
 ) {
   return new Promise((resolve, reject) => {
-    config = { divId, rawDiv, divStyling };
+    common.config.divId = divId;
+    common.config.rawDiv = rawDiv;
+    common.config.divStyling = divStyling;
     requestConfig = { replacementMap, url, method, headers, body };
 
-    const errors = validateConfiguration(config, requestConfig);
+    const errors = validateConfiguration(common.config, requestConfig);
 
     if (errors.length > 0) {
       reject(errors);
@@ -102,25 +57,11 @@ function configureInfiniteScroll(
 
     document.getElementById(divId).innerHTML += divStyling;
 
-    window.addEventListener('scroll', () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    window.addEventListener('scroll', common.scrollCallback);
 
-      // Check if the user has scrolled to the bottom
-      if (scrollTop + clientHeight >= scrollHeight - 100) {
-        loadMoreContent();
-      }
-    });
-
-    resolve(configResponse);
+    resolve(new common.ConfigBuilder(loadMoreContent));
   });
 }
-
-function appendNewsBox(div) {
-  const contentDiv = document.getElementById(config.divId);
-  contentDiv.innerHTML += div;
-}
-
-let isLoading = false;
 
 function handleKey(key, value, replacementMap, rawDiv) {
   const replacementMapElement = replacementMap[key];
@@ -141,7 +82,7 @@ function handleKey(key, value, replacementMap, rawDiv) {
 }
 
 function handleObject(obj, replacementMap) {
-  let rawDiv = config.rawDiv;
+  let rawDiv = common.config.rawDiv;
 
   for (const key in obj) {
     rawDiv = handleKey(key, obj[key], replacementMap, rawDiv);
@@ -154,8 +95,8 @@ function handleArray(arr, replacementMap) {
     if (typeof item === 'object') {
       const rawDiv = handleObject(item, replacementMap);
 
-      if (rawDiv !== config.rawDiv) {
-        appendNewsBox(rawDiv);
+      if (rawDiv !== common.config.rawDiv) {
+        common.appendNewsBox(rawDiv);
       }
     }
   }
@@ -221,35 +162,33 @@ function handleArray(arr, replacementMap) {
  *
  * Executes the after callback.
  */
+let isLoading = false;
 function loadMoreContent() {
   if (isLoading) {
     return;
   }
   isLoading = true;
 
-  if (config.beforeLoad) {
-    config.beforeLoad(requestConfig);
-  }
+  this.before && this.before(requestConfig);
 
   fetch(requestConfig.url, {
     method: requestConfig.method.toUpperCase(),
     headers: requestConfig.headers || { 'Accept': 'application/json' },
     body: requestConfig.body && JSON.stringify(requestConfig.body),
   })
-    .then(response => response.json())
-    .then(body => {
-      if (Array.isArray(body)) {
-        handleArray(body, requestConfig.replacementMap);
-      } else if (typeof body === 'object') {
-        handleObject(body, requestConfig.replacementMap);
+    .then(body => body.json())
+    .then(response => {
+      if (Array.isArray(response)) {
+        handleArray(response, requestConfig.replacementMap);
+      } else if (typeof response === 'object') {
+        handleObject(response, requestConfig.replacementMap);
       }
+      this.onSuccess && this.onSuccess(response);
     })
-    .catch(err => console.error(err))
+    .catch(err => this.onError && this.onError(err))
     .finally(() => {
       isLoading = false;
-      if (config.afterLoad) {
-        config.afterLoad(requestConfig);
-      }
+      this.after && this.after(requestConfig);
     });
 }
 

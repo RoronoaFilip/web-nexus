@@ -12,7 +12,8 @@
 <script src="http://localhost:8080/api/web-nexus"></script>
 <script>
   let currentPage = 1;
-  webNexus.configureInfiniteScroll('content',
+  let url = `https://newsapi.org/v2/everything?q=europe&pageSize=5&page=${currentPage}`;
+  webNexus.configureInfiniteScrollV2('content',
       '<div class="news-box">\n' +
       '    <div class="news-header">\n' +
       '        <h2 class="news-title">{{title}}</h2>\n' +
@@ -56,24 +57,25 @@
       '        text-align: right;\n' +
       '        color: #555;\n' +
       '    }\n' +
-      '</style>\n',
-      {
-        articles: {
-          title: true,
-          content: true,
-          author: true,
-        },
-      },
-      `https://newsapi.org/v2/everything?q=europe&pageSize=5&page=${currentPage}`,
-      'GET',
-      {
-        'X-Api-Key': '0c82ee1bf5624136bf6cec6b3b763395'
-      }).then(response => {
-    response.after((requestConfig) => {
-      console.log('after');
-      ++currentPage;
-      requestConfig.url = requestConfig.url.replace(/&page=\d+$/g, `&page=${currentPage}`);
-    }).start();
-  });
+      '</style>\n')
+      .then(response => {
+        response.before((replacementMap) => {
+          console.log('before');
+          return fetch(url, {
+            method: 'GET',
+            headers: {
+              'X-Api-Key': '0c82ee1bf5624136bf6cec6b3b763395'
+            }
+          }).then(response => response.json()).then(data => {
+            console.log(data);
+            return data.articles;
+          });
+        }).after((replacementMap) => {
+          console.log('after');
+          ++currentPage;
+
+          url = url.replace(/&page=\d+$/g, `&page=${currentPage}`);
+        }).start();
+      });
 </script>
 </html>
