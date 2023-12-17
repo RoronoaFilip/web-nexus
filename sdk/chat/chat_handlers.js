@@ -106,14 +106,13 @@ function fetchChatBox(recipient) {
     });
 }
 
-// TODO should be fixed with email
-function addUserOnline(username, password) {
+function addUserOnline(email) {
   config.socket = io(socketUrl);
 
-  config.currentUser = username;
+  config.currentUser = email;
 
   // fetch post request for login and auth
-  config.socket.emit('store user', username);
+  config.socket.emit('store user', email);
 
   setUpReceive(config.socket);
 }
