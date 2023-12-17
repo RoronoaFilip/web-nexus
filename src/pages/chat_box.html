@@ -11,7 +11,7 @@
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        overflow-y: auto;
+        overflow-y: hidden;
     }
 
     .chat-header {
@@ -27,10 +27,14 @@
     .chat-messages {
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
+        flex-wrap: nowrap;
         padding: 10px;
-        height: 100%;
-        overflow-y: scroll;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .chat-messages  > :first-child {
+        margin-top: auto !important;
     }
 
     .message {
@@ -38,6 +42,7 @@
         border-radius: 4px;
         margin-bottom: 8px;
         padding: 8px;
+        align-self: flex-end;
 
         &.received-message {
             background-color: #e1e1e1;
