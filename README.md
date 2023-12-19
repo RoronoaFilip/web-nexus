@@ -127,6 +127,9 @@ it checks this table to determine which seeds have already been applied.
 
 ## Versions
 
+### Version 1.6.1
+- Fix Authentication Bugs
+
 ### Version 1.6.0
 - Create authentication with JWT. Add Register, Login and Authentication Logic in SDK and Backend.
 
