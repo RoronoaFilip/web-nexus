@@ -48,6 +48,7 @@ function setUpLoginForm(divId) {
     })
     .then(setUpLoginEvent)
     .catch((error) => {
+      console.log('wrong');
       authEventHandler.onErrorHandler();
     });
 }
@@ -60,13 +61,14 @@ function setUpLoginEvent() {
       .value.trim();
     const password = document.getElementById('web-nexus-password-input')
       .value.trim();
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // const salt = bcrypt.genSaltSync(10);
+    // const hashedPassword = await bcrypt.hash(password, salt);
 
-    login(email, hashedPassword)
+    login(email, password)
       .then((data) => {
         authEventHandler.onSuccessfulAuthenticationHandler(data);
         addUserOnline(email);
+        loginForm.parentElement.remove();
       })
       .catch(() => {
         authEventHandler.onErrorHandler();
@@ -106,10 +108,10 @@ function setUpRegisterEvent() {
       .value.trim();
     const password = document.getElementById('web-nexus-register-password-input')
       .value.trim();
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // const salt = bcrypt.genSaltSync(10);
+    // const hashedPassword = await bcrypt.hash(password, salt);
 
-    register(firstName, lastName, email, hashedPassword)
+    register(firstName, lastName, email, password)
       .then((data) => {
         authEventHandler.onSuccessfulAuthenticationHandler(data);
         addUserOnline(email);
@@ -131,9 +133,9 @@ function setUpSwitchToLoginEvent(divId) {
 }
 
 function setResponseEvents(onSuccessfulAuthenticationCb, onErrorCb, onServerError) {
-  authEventHandler.onSuccessfulAuthenticationHandler = authEventHandler.onSuccessfulAuthenticationHandler || onSuccessfulAuthenticationCb;
-  authEventHandler.onErrorHandler = authEventHandler.onErrorHandler || onErrorCb;
-  authEventHandler.onServerErrorHandler = authEventHandler.onServerErrorHandler || onServerError;
+  authEventHandler.onSuccessfulAuthenticationHandler = onSuccessfulAuthenticationCb || authEventHandler.onSuccessfulAuthenticationHandler;
+  authEventHandler.onErrorHandler = onErrorCb || authEventHandler.onErrorHandler;
+  authEventHandler.onServerErrorHandler = onServerError || authEventHandler.onServerErrorHandler;
 }
 
 function goToLoginForm(redirectUrl) {
