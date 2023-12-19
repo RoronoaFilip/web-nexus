@@ -138,6 +138,7 @@
     </style>
 </head>
 <body>
+<div id="auth-container"></div>
 <header class="header">
     <h1>Welcome to Filip's and Alex' Site</h1>
 </header>
@@ -184,11 +185,17 @@
 </footer>
 <script src="http://localhost:8080/api/web-nexus"></script>
 <script>
-  webNexus.setChatBoxDivId('chat-container')
-  webNexus.createLoginForm();
-  document.getElementById('new-chat-button').addEventListener('click', function () {
-    webNexus.createChatBox(document.getElementById('chat-recipient-input').value.trim());
-  });
+    const onSuccessfulLogin = (data) => {
+        const url = 'http://localhost:63342/web-nexus/sdk/pages/demo-page.html';
+        document.cookie = data.accessTokenCookie;
+        // window.location.replace(url);
+    }
+
+    webNexus.setChatBoxDivId('chat-container')
+    webNexus.initializeAuthenticationContainer('auth-container', onSuccessfulLogin);
+    document.getElementById('new-chat-button').addEventListener('click', function () {
+        webNexus.createChatBox(document.getElementById('chat-recipient-input').value.trim());
+    });
 </script>
 </body>
 </html>
