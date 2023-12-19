@@ -19,7 +19,6 @@ NewsAPI Key = 0c82ee1bf5624136bf6cec6b3b763395
 
 01.12.24 - Alex
   - Auth for every endpoint.
-  - Add middleware for extracting the Authorization header
-  - Do not do it for login and register endpoints.
   - Investigate Redis and Caching of things, maybe pagination.
+  - Add Redis for creating session.
   - A whole Chat Page like in messenger. Who is Online?

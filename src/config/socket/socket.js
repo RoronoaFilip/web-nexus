@@ -33,8 +33,8 @@ function configureSocketConnection(server) {
     });
 
     // Store user information on connection
-    socket.on('store user', (username) => {
-      users[username] = socket;
+    socket.on('store user', (email) => {
+      users[email] = socket;
     });
 
     // Handle disconnect

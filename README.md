@@ -92,7 +92,7 @@ cd /src/config/db
 ```
 Then type:
 ```
-npx migrate:make <migration file name> --knexfile knexfile.js
+npx knex migrate:make <migration file name> --knexfile knexfile.js
 ```
 
 #### 2. Seed

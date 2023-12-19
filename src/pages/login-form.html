@@ -1,0 +1,86 @@
+<style>
+    .auth-container {
+        position: absolute;
+        left: 35%;
+        z-index: 100;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+    }
+
+    .auth-container h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    .form-group input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+    }
+
+    .login-btn {
+        padding: 10px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .login-btn:hover {
+        background-color: #2980b9;
+    }
+
+    .register-form {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .register-form a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .register-form p {
+        font-weight: bold;
+    }
+</style>
+<div class="auth-container">
+    <h2>Login Form</h2>
+    <form id="web-nexus-auth-form" class="auth-form">
+        <div class="form-group">
+            <label for="web-nexus-email-input">Email:</label>
+            <input type="text" id="web-nexus-email-input" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="web-nexus-password-input">Password:</label>
+            <input type="password" id="web-nexus-password-input" name="password" required>
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+        <div class="register-form">
+            <p>Don't have an account? <a href="#" id="switch-to-register">Register</a></p>
+        </div>
+    </form>
+</div>
