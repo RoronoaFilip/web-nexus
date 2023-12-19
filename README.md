@@ -127,6 +127,12 @@ it checks this table to determine which seeds have already been applied.
 
 ## Versions
 
+### Version 1.6.0
+- Create authentication with JWT. Add Register, Login and Authentication Logic in SDK and Backend.
+
+### Version 1.5.0
+- Create Infinite Scroll V2. Extract shared Infinite Scroll Logic in common.js.
+
 ### Version 1.4.0
 - Add migrations and seeds with Knex.
 
