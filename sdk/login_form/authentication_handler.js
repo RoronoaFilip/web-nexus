@@ -88,7 +88,7 @@ function setUpRegisterForm(divId) {
           forms.registerForm = body;
         })
         .then(setUpRegisterEvent)
-        .then(setUpSwitchToLoginEvent(divId))
+        .then(() => setUpSwitchToLoginEvent(divId))
         .catch((error) => {
           console.log(error);
         });
