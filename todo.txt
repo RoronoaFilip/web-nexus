@@ -13,9 +13,9 @@ NewsAPI Key = 0c82ee1bf5624136bf6cec6b3b763395
  - Investigate how to load a whole Chat, and how do save it in the DB.
 
 01.12.24 - Filip
-  - Finish v2 of Infinite Scroll
-  - Add auth to every chat message
-  - Infinite Scroll for the Chat.
+  - Finish v2 of Infinite Scroll -> They are now classes. All logic is done
+  - Add auth to every chat message -> No Time
+  - Infinite Scroll for the Chat. -> Not gonna do. Gonna think how to save the Chat in the DB.
 
 01.12.24 - Alex
   - Auth for every endpoint.

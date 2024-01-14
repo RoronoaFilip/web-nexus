@@ -13,69 +13,72 @@
 <script>
   let currentPage = 1;
   let url = `https://newsapi.org/v2/everything?q=europe&pageSize=5&page=${currentPage}`;
-  webNexus.configureInfiniteScrollV2('content',
-      '<div class="news-box">\n' +
-      '    <div class="news-header">\n' +
-      '        <h2 class="news-title">{{title}}</h2>\n' +
-      '    </div>\n' +
-      '    <div class="news-content">\n' +
-      '        <p>{{content}}</p>\n' +
-      '    </div>\n' +
-      '    <div class="news-author">\n' +
-      '        <p>Author: {{author}}</p>\n' +
-      '    </div>\n' +
-      '</div>',
-      '<style>\n' +
-      '    .news-box {\n' +
-      '        max-width: 600px;\n' +
-      '        margin: 20px auto;\n' +
-      '        background-color: #fff;\n' +
-      '        border-radius: 8px;\n' +
-      '        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n' +
-      '        overflow: hidden;\n' +
-      '    }\n' +
-      '\n' +
-      '    .news-header {\n' +
-      '        background-color: #3498db;\n' +
-      '        color: #fff;\n' +
-      '        padding: 15px;\n' +
-      '    }\n' +
-      '\n' +
-      '    .news-title {\n' +
-      '        margin: 0;\n' +
-      '        font-size: 24px;\n' +
-      '    }\n' +
-      '\n' +
-      '    .news-content {\n' +
-      '        color: black;\n' +
-      '        padding: 15px;\n' +
-      '    }\n' +
-      '\n' +
-      '    .news-author {\n' +
-      '        padding: 15px;\n' +
-      '        border-top: 1px solid #ddd;\n' +
-      '        text-align: right;\n' +
-      '        color: #555;\n' +
-      '    }\n' +
-      '</style>\n')
-      .then(response => {
-        response.before((replacementMap) => {
-          console.log('before');
-          return fetch(url, {
-            method: 'GET',
-            headers: {
-              'X-Api-Key': '0c82ee1bf5624136bf6cec6b3b763395'
-            }
-          }).then(response => response.json()).then(data => {
-            console.log(data);
-            return data.articles;
-          });
-        }).after((replacementMap) => {
-          console.log('after');
-          ++currentPage;
+  webNexus.setupInfiniteScrollV2('content',
+    '<div class="news-box">\n' +
+    '    <div class="news-header">\n' +
+    '        <h2 class="news-title">{{title}}</h2>\n' +
+    '    </div>\n' +
+    '    <div class="news-content">\n' +
+    '        <p>{{content}}</p>\n' +
+    '    </div>\n' +
+    '    <div class="news-author">\n' +
+    '        <p>Author: {{author}}</p>\n' +
+    '    </div>\n' +
+    '</div>',
+    '<style>\n' +
+    '    .news-box {\n' +
+    '        max-width: 600px;\n' +
+    '        margin: 20px auto;\n' +
+    '        background-color: #fff;\n' +
+    '        border-radius: 8px;\n' +
+    '        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n' +
+    '        overflow: hidden;\n' +
+    '    }\n' +
+    '\n' +
+    '    .news-header {\n' +
+    '        background-color: #3498db;\n' +
+    '        color: #fff;\n' +
+    '        padding: 15px;\n' +
+    '    }\n' +
+    '\n' +
+    '    .news-title {\n' +
+    '        margin: 0;\n' +
+    '        font-size: 24px;\n' +
+    '    }\n' +
+    '\n' +
+    '    .news-content {\n' +
+    '        color: black;\n' +
+    '        padding: 15px;\n' +
+    '    }\n' +
+    '\n' +
+    '    .news-author {\n' +
+    '        padding: 15px;\n' +
+    '        border-top: 1px solid #ddd;\n' +
+    '        text-align: right;\n' +
+    '        color: #555;\n' +
+    '    }\n' +
+    '</style>\n')
+    .then(response => {
+      response.before((replacementMap) => {
+        console.log('before');
+        return fetch(url, {
+          method: 'GET',
+          headers: {
+            'X-Api-Key': '0c82ee1bf5624136bf6cec6b3b763395'
+          }
+        }).then(response => response.json()).then(data => {
+          console.log(data);
+          return data.articles;
+        });
+      }).after((replacementMap) => {
+        console.log('after');
+        ++currentPage;
 
-          url = url.replace(/&page=\d+$/g, `&page=${currentPage}`);
-        }).start();
-      });
+        url = url.replace(/&page=\d+$/g, `&page=${currentPage}`);
+      }).onError((error) => {
+        console.log(error);
+      })
+        .start();
+    });
 </script>
 </html>
