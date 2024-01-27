@@ -1,8 +1,7 @@
+const styles = require('./app-chat.css');
 const {html, render} = require('lit-html');
-const io = require("socket.io-client");
 const {createRef, ref} = require("lit-html/directives/ref.js");
 const {when} = require("lit-html/directives/when.js");
-require('./app-chat.css');
 
 class AppChat extends HTMLElement {
   messages = []; // {"type": "received/sent", "message": "string"}
@@ -21,6 +20,7 @@ class AppChat extends HTMLElement {
     const renderMessages = () => html`${this.messages.map(message => html`
         <div class="message ${message.type}-message">${message.message}</div>`)}`
     return html`
+        <style>${styles.default.toString()}</style>
         <div class="chat-box">
             <div class="chat-header">Chat with ${this.them}
                 <button class="close-button" @click="${() => document.getElementById(`chatBox${this.them}`)?.remove()}">X</button>
@@ -36,7 +36,8 @@ class AppChat extends HTMLElement {
     `
   }
 
-  sendMessage() {
+  sendMessage(event) {
+    event?.preventDefault();
     const message = this.#inputRef.value.value;
     this.#inputRef.value.value = '';
     this.#inputRef.value.focus();

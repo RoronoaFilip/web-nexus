@@ -80,7 +80,8 @@ function setUpLoginEvent(version, chatBoxDivId) {
 }
 
 function setUpRegisterForm(divId) {
-  document.getElementById("switch-to-register")?.addEventListener("click", function (event) {
+  let switchToRegisterButton = document.getElementById("switch-to-register");
+  switchToRegisterButton?.addEventListener("click", function (event) {
     event.preventDefault();
     fetch(registerFormUrl)
         .then((result) => result.text())
@@ -99,7 +100,7 @@ function setUpRegisterForm(divId) {
 
 function setUpRegisterEvent() {
   const registerForm = document.getElementById('web-nexus-register-form');
-  registerForm.addEventListener('submit', async function (event) {
+  registerForm?.addEventListener('submit', async function (event) {
     event.preventDefault();
     const firstName = document.getElementById('web-nexus-firstname-input')
         .value.trim();
@@ -124,7 +125,8 @@ function setUpRegisterEvent() {
 }
 
 function setUpSwitchToLoginEvent(divId) {
-  document.getElementById("switch-to-login")?.addEventListener("click", function (event) {
+  let switchToLoginButton = document.getElementById("switch-to-login");
+  switchToLoginButton?.addEventListener("click", function (event) {
     event.preventDefault();
     const authContainerDiv = document.getElementById(divId);
     authContainerDiv.innerHTML = forms.loginForm;

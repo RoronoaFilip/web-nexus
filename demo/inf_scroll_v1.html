@@ -2,21 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        .content-class {
-            display: flex;
-            justify-content: space-evenly;
-            flex-direction: column;
-            align-items: center;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Filip's and Alex' Site</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<header class="header">
+    <h1>Welcome to Filip's and Alex' Site</h1>
+    <h3>Infinite Scroll V1</h3>
+</header>
+<nav class="nav">
+    <ul>
+        <li><a href="./main.html">Home</a></li>
+        <li><a href="./chat_v1.html">Live Chat V1</a></li>
+        <li><a href="./chat_v2.html">Live Chat V2</a></li>
+        <li><a class="current-page" href="./inf_scroll_v1.html">InfiniteScroll V1</a></li>
+        <li><a href="./inf_scroll_v2.html">InfiniteScroll V2</a></li>
+    </ul>
+</nav>
 
-<div id="content" class="content-class"></div>
+<div id="content" class="inf-scroll-content"></div>
 
-</body>
+<footer class="footer">
+    <p>&copy; 2023 Filip's and Alex' Site. All rights reserved.</p>
+</footer>
 <script src="http://localhost:8080/api/web-nexus"></script>
 <script>
   let currentPage = 1;
@@ -27,7 +36,6 @@
       '<style>\n' +
       '    :root {\n' +
       '        font-family: \'Arial\', sans-serif;\n' +
-      '        background-color: #f4f4f4;\n' +
       '        text-align: center;\n' +
       '        margin: 50px;\n' +
       '    }\n' +
@@ -73,4 +81,5 @@
         .start();
   });
 </script>
+</body>
 </html>

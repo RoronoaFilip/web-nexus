@@ -130,67 +130,95 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        top: 5rem;
     }
     </style>
 </head>
 <body>
-<div id="auth-container"></div>
 <header class="header">
     <h1>Welcome to Filip's and Alex' Site</h1>
 </header>
 <nav class="nav">
     <ul>
-        <li><a href="/main">Home</a></li>
-        <li><a href="/main">About Us</a></li>
-        <li><a href="/main">Services</a></li>
-        <li><a href="/main">Contact</a></li>
+        <li><a href="./main.html">Home</a></li>
+        <li><a href="./chat_v1.html">Live Chat V1</a></li>
+        <li><a href="./chat_v2.html">Live Chat V2</a></li>
+        <li><a href="./inf_scroll_v1.html">InfiniteScroll V1</a></li>
+        <li><a href="./inf_scroll_v2.html">InfiniteScroll V2</a></li>
+        <li><a href="./inf_scroll_v2_2.html">InfiniteScroll V2, Type 2</a></li>
     </ul>
 </nav>
-<div class="container">
-    <h2 class="section-title">About Us</h2>
-    <p class="section-content">
-        Welcome to Filip's and Alex' Site! We're here to provide you with the most amazing content and services. Our team
-        is
-        dedicated to making your experience truly exceptional.
-    </p>
-</div>
-<div class="container">
-    <h2 class="section-title">Our Services</h2>
-    <ul class="section-list">
-        <li>
-            <div id="pie-chart-id"></div>
-        </li>
-    </ul>
-</div>
-<div class="container">
-    <h2 class="section-title">Contact Us</h2>
-    <address class="section-content">
-        Email: <a href="mailto:info@example.com">fkfilchev@gmail.com</a><br>
-        Phone: <a href="tel:+123456789">alabala</a>
-    </address>
-</div>
-<div>
-    <label>
-        <input id="chat-recipient-input" type="text" placeholder="Start Chat With">
-    </label>
-    <button type="button" id="new-chat-button">Start Chat</button>
-</div>
-<div class="chat-container" id="chat-container"></div>
+
+<div id="content" class="content-class"></div>
+
 <footer class="footer">
     <p>&copy; 2023 Filip's and Alex' Site. All rights reserved.</p>
 </footer>
 <script src="http://localhost:8080/api/web-nexus"></script>
 <script>
-    const onSuccessfulLogin = (data) => {
-        const url = 'http://localhost:63342/web-nexus/sdk/pages/demo-page.html';
-        document.cookie = data.accessTokenCookie;
-        window.location.replace(url);
-    }
+  let currentPage = 1;
+  webNexus.setupInfiniteScroll('content',
+      '<div class="text-container">\n' +
+      '    <p class="p">{{joke}}</p>\n' +
+      '</div>',
+      '<style>\n' +
+      '    :root {\n' +
+      '        font-family: \'Arial\', sans-serif;\n' +
+      '        background-color: #f4f4f4;\n' +
+      '        text-align: center;\n' +
+      '        margin: 50px;\n' +
+      '    }\n' +
+      '\n' +
+      '    .text-container {\n' +
+      '        display: flex;\n' +
+      '        justify-content: center;\n' +
+      '        align-items: center;\n' +
+      '        width: 600px;\n' +
+      '        height: 200px;\n' +
+      '        background-color: #fff;\n' +
+      '        padding: 20px;\n' +
+      '        border-radius: 8px;\n' +
+      '        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n' +
+      '        margin-bottom: 15px;\n' +
+      '\n' +
+      '        .p {\n' +
+      '            color: #333;\n' +
+      '            font-size: 18px;\n' +
+      '            line-height: 1.6;\n' +
+      '            font-weight: bold;\n' +
+      '        }\n' +
+      '    }\n' +
+      '</style>'
+  ).then(response => {
 
-    webNexus.initializeAuthenticationContainer('auth-container', 'v1', 'chat-container', onSuccessfulLogin);
-    document.getElementById('new-chat-button').addEventListener('click', function () {
-        webNexus.createChatBox(document.getElementById('chat-recipient-input').value.trim());
-    });
+    response
+        .before((replacementMap) => {
+          const url = `https://icanhazdadjoke.com/search?limit=5&page=${currentPage}`;
+          console.log("before");
+          return fetch(url, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json'
+            }
+          })
+              .then(response => response.json())
+              .then(data => {
+                console.log(data);
+                return data.results;
+              });
+        })
+        .after((replacementMap)  => {
+          console.log("after");
+          currentPage++;
+        }).onError((error) => {
+      alert(error);
+    })
+        .start();
+  })
+  ;
 </script>
 </body>
 </html>

@@ -1,11 +1,6 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
 const isProduction = process.env.NODE_ENV === 'production';
 
-
-const stylesHandler = MiniCssExtractPlugin.loader;
 
 const config = {
   entry: './sdk/index.js',
@@ -13,13 +8,6 @@ const config = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
-  plugins: [
-    // new HtmlWebpackPlugin({
-    //   template: 'index.html',
-    // }),
-
-    new MiniCssExtractPlugin(),
-  ],
   module: {
     rules: [
       {
@@ -28,11 +16,11 @@ const config = {
       },
       {
         test: /\.css$/i,
-        use: [stylesHandler,'css-loader'],
+        use: [ 'css-loader' ],
       },
       {
         test: /\.s[ac]ss$/i,
-        use: [stylesHandler, 'css-loader', 'sass-loader'],
+        use: [ 'css-loader', 'sass-loader' ],
       },
     ],
   },
@@ -41,8 +29,6 @@ const config = {
 module.exports = () => {
   if (isProduction) {
     config.mode = 'production';
-
-
   } else {
     config.mode = 'development';
   }

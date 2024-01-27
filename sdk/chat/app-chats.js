@@ -1,7 +1,6 @@
 const {html, render} = require('lit-html');
 const io = require("socket.io-client");
 const {createRef, ref} = require("lit-html/directives/ref.js");
-const {when} = require("lit-html/directives/when.js");
 
 class AppChats extends HTMLElement {
   socketUrl = 'http://localhost:8081';
@@ -19,8 +18,13 @@ class AppChats extends HTMLElement {
     this.#socket = io(this.socketUrl);
     this.#socket.on("receive private message", (messageObject) => {
       const {from, to, message} = messageObject
-      const chatBox = document.getElementById(`chatBox${from}`);
-      chatBox?.receiveMessage(message);
+      let chatBox = document.getElementById(`chatBox${from}`);
+      !chatBox && this.renderChat(from);
+      chatBox = document.getElementById(`chatBox${from}`);
+      chatBox.receiveMessage(message);
+    });
+    this.#socket.on("private message error", (error) => {
+      alert(error);
     });
   }
 
@@ -38,17 +42,18 @@ class AppChats extends HTMLElement {
     this.#socket.emit('store user', email);
   }
 
-  renderChat() {
-    const recipient = this.#inputRef.value.value;
+  renderChat(newChatRecipient = null) {
+    const recipient = this.#inputRef.value.value || newChatRecipient;
     this.#inputRef.value.value = '';
     this.openChatUsernames.push(recipient);
 
     const chat = document.createElement('app-chat');
-
     chat.setMe(this.currentUser);
     chat.setRecipient(recipient);
     chat.onSend((messageObject) => {
-      this.#socket.emit("send private message", messageObject);
+      if (!messageObject.to || !messageObject.message) {
+        this.#socket.emit("send private message", messageObject);
+      }
     });
 
     this.chatsDiv.appendChild(chat);
