@@ -132,4 +132,4 @@ function setChatBoxDivId(divId) {
   config.chatsContainerDivId = divId;
 }
 
-module.exports = { createChatBox, addUserOnline, setChatBoxDivId };
+module.exports = { createChatBox, addUserOnline };
