@@ -187,8 +187,7 @@
         window.location.replace(url);
     }
 
-    webNexus.setChatBoxDivId('chat-container')
-    webNexus.initializeAuthenticationContainer('auth-container', onSuccessfulLogin);
+    webNexus.initializeAuthenticationContainer('auth-container', 'v1', 'chat-container', onSuccessfulLogin);
     document.getElementById('new-chat-button').addEventListener('click', function () {
         webNexus.createChatBox(document.getElementById('chat-recipient-input').value.trim());
     });

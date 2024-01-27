@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://localhost:8080/api/web-nexus"></script>
+</head>
+<body>
+<div id="auth-container"></div>
+
+<chats-input-box></chats-input-box>
+<div id="chats-box"></div>
+
+
+<script>
+  const onSuccessfulLogin = (data) => {
+    const url = 'http://localhost:63342/web-nexus/sdk/pages/demo-page.html';
+    document.cookie = data.accessTokenCookie;
+    // window.location.replace(url);
+  }
+
+  webNexus.initializeAuthenticationContainer('auth-container', 'v2', 'chats-box', onSuccessfulLogin);
+</script>
+</body>
+</html>
