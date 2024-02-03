@@ -8,4 +8,4 @@ function renderAppChats(chatsDivId, currentUserEmail) {
   chatsApp.render();
 }
 
-module.exports = {renderAppChats};
+module.exports = { renderAppChats };

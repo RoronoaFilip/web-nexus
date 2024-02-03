@@ -1,12 +1,12 @@
-const {html, render} = require('lit-html');
+const { html, render } = require('lit-html');
 const io = require("socket.io-client");
-const {createRef, ref} = require("lit-html/directives/ref.js");
+const { createRef, ref } = require("lit-html/directives/ref.js");
 
 class AppChats extends HTMLElement {
   socketUrl = 'http://localhost:8081';
   openChatUsernames = [];
-  #socket
-  #showRoot
+  #socket;
+  #showRoot;
   #inputRef = createRef();
   chatsDiv;
   currentUser = '';
@@ -14,10 +14,10 @@ class AppChats extends HTMLElement {
   constructor() {
     super();
 
-    this.#showRoot = this.attachShadow({mode: 'open'});
+    this.#showRoot = this.attachShadow({ mode: 'open' });
     this.#socket = io(this.socketUrl);
     this.#socket.on("receive private message", (messageObject) => {
-      const {from, to, message} = messageObject
+      const { from, to, message } = messageObject;
       let chatBox = document.getElementById(`chatBox${from}`);
       !chatBox && this.renderChat(from);
       chatBox = document.getElementById(`chatBox${from}`);
@@ -34,7 +34,7 @@ class AppChats extends HTMLElement {
         <button @click=${this.renderChat.bind(this)}>Start Chat</button>
         <div>Chats</div>
         <div id="chats"></div>
-    `
+    `;
   }
 
   setCurrentUser(email) {

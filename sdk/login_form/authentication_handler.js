@@ -1,5 +1,5 @@
-const {addUserOnline} = require('../chat/chat_handlers');
-const {renderAppChats} = require('../chat/chat_handlers_v2');
+const { addUserOnline } = require('../chat/v1/chat_handlers');
+const { renderAppChats } = require('../chat/v2/chat_handlers_v2');
 const bcrypt = require('bcryptjs');
 
 const loginFormUrl = 'http://localhost:8080/api/authentication/login-form';
@@ -24,9 +24,9 @@ const forms = {
 };
 
 function initializeAuthenticationContainer(divId, version, chatBoxDivId,
-                                           onSuccessfulCb = undefined,
-                                           onErrorCb = undefined,
-                                           onServerError = undefined) {
+  onSuccessfulCb = undefined,
+  onErrorCb = undefined,
+  onServerError = undefined) {
   setUpLoginForm(divId, version, chatBoxDivId);
   setUpRegisterForm(divId);
   setResponseEvents(onSuccessfulCb, onErrorCb, onServerError);
@@ -34,25 +34,25 @@ function initializeAuthenticationContainer(divId, version, chatBoxDivId,
 
 function setUpLoginForm(divId, version, chatBoxDivId) {
   fetch(loginFormUrl)
-      .then((result) => result.text())
-      .then((body) => {
-        if (divId) {
-          document.getElementById(divId).innerHTML = body;
-        } else {
-          const authContainerDiv = document.createElement('div');
-          authContainerDiv.innerHTML = body;
-          document.body.insertBefore(authContainerDiv, document.body.firstChild);
-        }
+    .then((result) => result.text())
+    .then((body) => {
+      if (divId) {
+        document.getElementById(divId).innerHTML = body;
+      } else {
+        const authContainerDiv = document.createElement('div');
+        authContainerDiv.innerHTML = body;
+        document.body.insertBefore(authContainerDiv, document.body.firstChild);
+      }
 
-        forms.loginForm = body;
-      })
-      .then(() => {
-        setUpLoginEvent(version, chatBoxDivId)
-      })
-      .catch((error) => {
-        console.log('wrong');
-        authEventHandler.onErrorHandler();
-      });
+      forms.loginForm = body;
+    })
+    .then(() => {
+      setUpLoginEvent(version, chatBoxDivId);
+    })
+    .catch((error) => {
+      console.log('wrong');
+      authEventHandler.onErrorHandler();
+    });
 }
 
 function setUpLoginEvent(version, chatBoxDivId) {
@@ -61,21 +61,21 @@ function setUpLoginEvent(version, chatBoxDivId) {
   loginForm.addEventListener('submit', async function (event) {
     event.preventDefault();
     const email = document.getElementById('web-nexus-email-input')
-        .value.trim();
+      .value.trim();
     const password = document.getElementById('web-nexus-password-input')
-        .value.trim();
+      .value.trim();
     // const salt = bcrypt.genSaltSync(10);
     // const hashedPassword = await bcrypt.hash(password, salt);
 
     login(email, password)
-        .then((data) => {
-          authEventHandler.onSuccessfulAuthenticationHandler(data);
-          onSuccessfulAuthenticationCb(chatBoxDivId, email);
-          loginForm.parentElement.remove();
-        })
-        .catch(() => {
-          authEventHandler.onErrorHandler();
-        });
+      .then((data) => {
+        authEventHandler.onSuccessfulAuthenticationHandler(data);
+        onSuccessfulAuthenticationCb(chatBoxDivId, email);
+        loginForm.parentElement.remove();
+      })
+      .catch(() => {
+        authEventHandler.onErrorHandler();
+      });
   });
 }
 
@@ -84,17 +84,17 @@ function setUpRegisterForm(divId) {
   switchToRegisterButton?.addEventListener("click", function (event) {
     event.preventDefault();
     fetch(registerFormUrl)
-        .then((result) => result.text())
-        .then((body) => {
-          const authContainerDiv = document.getElementById(divId);
-          authContainerDiv.innerHTML = body;
-          forms.registerForm = body;
-        })
-        .then(setUpRegisterEvent)
-        .then(() => setUpSwitchToLoginEvent(divId))
-        .catch((error) => {
-          console.log(error);
-        });
+      .then((result) => result.text())
+      .then((body) => {
+        const authContainerDiv = document.getElementById(divId);
+        authContainerDiv.innerHTML = body;
+        forms.registerForm = body;
+      })
+      .then(setUpRegisterEvent)
+      .then(() => setUpSwitchToLoginEvent(divId))
+      .catch((error) => {
+        console.log(error);
+      });
   });
 }
 
@@ -103,24 +103,24 @@ function setUpRegisterEvent() {
   registerForm?.addEventListener('submit', async function (event) {
     event.preventDefault();
     const firstName = document.getElementById('web-nexus-firstname-input')
-        .value.trim();
+      .value.trim();
     const lastName = document.getElementById('web-nexus-lastname-input')
-        .value.trim();
+      .value.trim();
     const email = document.getElementById('web-nexus-email-input')
-        .value.trim();
+      .value.trim();
     const password = document.getElementById('web-nexus-register-password-input')
-        .value.trim();
+      .value.trim();
     // const salt = bcrypt.genSaltSync(10);
     // const hashedPassword = await bcrypt.hash(password, salt);
 
     register(firstName, lastName, email, password)
-        .then((data) => {
-          authEventHandler.onSuccessfulAuthenticationHandler(data);
-          addUserOnline(email);
-        })
-        .catch(() => {
-          authEventHandler.onServerErrorHandler();
-        });
+      .then((data) => {
+        authEventHandler.onSuccessfulAuthenticationHandler(data);
+        addUserOnline(email);
+      })
+      .catch(() => {
+        authEventHandler.onServerErrorHandler();
+      });
   });
 }
 
@@ -161,29 +161,29 @@ function register(firstName, lastName, email, password) {
 
   return new Promise((resolve, reject) => {
     fetch(backendRegisterEndpoint, requestOptions)
-        .then((response) => {
-          if (response.status === 404) {
-            reject(authEventHandler.onErrorHandler);
-          }
-          if (response.status === 500) {
-            reject(authEventHandler.onServerErrorHandler);
-          }
-          if (!response.ok) {
-            reject(() => {
-              console.log(`Server returned ${response.status}`);
-            });
-          }
-
-          return response.json();
-        }).then((data) => {
-      resolve(data);
-    })
-        .catch((error) => {
-          reject((error) => {
-            console.log(error);
-            // authEventHandler.onErrorHandler();
+      .then((response) => {
+        if (response.status === 404) {
+          reject(authEventHandler.onErrorHandler);
+        }
+        if (response.status === 500) {
+          reject(authEventHandler.onServerErrorHandler);
+        }
+        if (!response.ok) {
+          reject(() => {
+            console.log(`Server returned ${response.status}`);
           });
+        }
+
+        return response.json();
+      }).then((data) => {
+        resolve(data);
+      })
+      .catch((error) => {
+        reject((error) => {
+          console.log(error);
+          // authEventHandler.onErrorHandler();
         });
+      });
   });
 }
 
@@ -202,30 +202,30 @@ function login(email, password) {
 
   return new Promise((resolve, reject) => {
     fetch(backendLoginEndpoint, requestOptions)
-        .then((response) => {
-          if (response.status === 404) {
-            reject(authEventHandler.onErrorHandler);
-          }
-          if (response.status === 500) {
-            reject(authEventHandler.onServerErrorHandler);
-          }
-          if (!response.ok) {
-            reject(() => {
-              console.log(`Server returned ${response.status}`);
-            });
-          }
-
-          return response.json();
-        })
-        .then((data) => {
-          resolve(data);
-        })
-        .catch((error) => {
-          reject((error) => {
-            console.log(error);
-            // authEventHandler.onErrorHandler();
+      .then((response) => {
+        if (response.status === 404) {
+          reject(authEventHandler.onErrorHandler);
+        }
+        if (response.status === 500) {
+          reject(authEventHandler.onServerErrorHandler);
+        }
+        if (!response.ok) {
+          reject(() => {
+            console.log(`Server returned ${response.status}`);
           });
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((error) => {
+        reject((error) => {
+          console.log(error);
+          // authEventHandler.onErrorHandler();
         });
+      });
   });
 }
 
@@ -234,4 +234,4 @@ function defaultOnSuccessfulAuthenticationHandler(data) {
   window.location.replace(data.redirectUrl);
 }
 
-module.exports = {goToLoginForm, initializeAuthenticationContainer};
+module.exports = { goToLoginForm, initializeAuthenticationContainer };
