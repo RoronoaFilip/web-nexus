@@ -1,4 +1,5 @@
-const { addUserOnline } = require('../chat/chat_handlers');
+const { addUserOnline } = require('../chat/v1/chat_handlers');
+const { renderAppChats } = require('../chat/v2/chat_handlers_v2');
 const bcrypt = require('bcryptjs');
 
 const loginFormUrl = 'http://localhost:8080/api/authentication/login-form';
@@ -22,17 +23,16 @@ const forms = {
   registerForm: null
 };
 
-function initializeAuthenticationContainer(divId,
+function initializeAuthenticationContainer(divId, version, chatBoxDivId,
   onSuccessfulCb = undefined,
   onErrorCb = undefined,
-  onServerError = undefined)
-{
-  setUpLoginForm(divId);
+  onServerError = undefined) {
+  setUpLoginForm(divId, version, chatBoxDivId);
   setUpRegisterForm(divId);
   setResponseEvents(onSuccessfulCb, onErrorCb, onServerError);
 }
 
-function setUpLoginForm(divId) {
+function setUpLoginForm(divId, version, chatBoxDivId) {
   fetch(loginFormUrl)
     .then((result) => result.text())
     .then((body) => {
@@ -46,14 +46,17 @@ function setUpLoginForm(divId) {
 
       forms.loginForm = body;
     })
-    .then(setUpLoginEvent)
+    .then(() => {
+      setUpLoginEvent(version, chatBoxDivId);
+    })
     .catch((error) => {
       console.log('wrong');
       authEventHandler.onErrorHandler();
     });
 }
 
-function setUpLoginEvent() {
+function setUpLoginEvent(version, chatBoxDivId) {
+  const onSuccessfulAuthenticationCb = version === 'v2' ? renderAppChats : addUserOnline;
   const loginForm = document.getElementById('web-nexus-auth-form');
   loginForm.addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -67,7 +70,7 @@ function setUpLoginEvent() {
     login(email, password)
       .then((data) => {
         authEventHandler.onSuccessfulAuthenticationHandler(data);
-        addUserOnline(email);
+        onSuccessfulAuthenticationCb(chatBoxDivId, email);
         loginForm.parentElement.remove();
       })
       .catch(() => {
@@ -77,28 +80,27 @@ function setUpLoginEvent() {
 }
 
 function setUpRegisterForm(divId) {
-  document.addEventListener("click", function (event) {
-    if (event.target && event.target.id === "switch-to-register") {
-      event.preventDefault();
-      fetch(registerFormUrl)
-        .then((result) => result.text())
-        .then((body) => {
-          const authContainerDiv = document.getElementById(divId);
-          authContainerDiv.innerHTML = body;
-          forms.registerForm = body;
-        })
-        .then(setUpRegisterEvent)
-        .then(() => setUpSwitchToLoginEvent(divId))
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+  let switchToRegisterButton = document.getElementById("switch-to-register");
+  switchToRegisterButton?.addEventListener("click", function (event) {
+    event.preventDefault();
+    fetch(registerFormUrl)
+      .then((result) => result.text())
+      .then((body) => {
+        const authContainerDiv = document.getElementById(divId);
+        authContainerDiv.innerHTML = body;
+        forms.registerForm = body;
+      })
+      .then(setUpRegisterEvent)
+      .then(() => setUpSwitchToLoginEvent(divId))
+      .catch((error) => {
+        console.log(error);
+      });
   });
 }
 
 function setUpRegisterEvent() {
   const registerForm = document.getElementById('web-nexus-register-form');
-  registerForm.addEventListener('submit', async function (event) {
+  registerForm?.addEventListener('submit', async function (event) {
     event.preventDefault();
     const firstName = document.getElementById('web-nexus-firstname-input')
       .value.trim();
@@ -123,12 +125,11 @@ function setUpRegisterEvent() {
 }
 
 function setUpSwitchToLoginEvent(divId) {
-  document.addEventListener("click", function (event) {
-    if (event.target && event.target.id === "switch-to-login") {
-      event.preventDefault();
-      const authContainerDiv = document.getElementById(divId);
-      authContainerDiv.innerHTML = forms.loginForm;
-    }
+  let switchToLoginButton = document.getElementById("switch-to-login");
+  switchToLoginButton?.addEventListener("click", function (event) {
+    event.preventDefault();
+    const authContainerDiv = document.getElementById(divId);
+    authContainerDiv.innerHTML = forms.loginForm;
   });
 }
 

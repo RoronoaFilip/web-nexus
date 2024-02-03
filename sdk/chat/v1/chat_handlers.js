@@ -112,7 +112,8 @@ function fetchChatBox(recipient) {
     });
 }
 
-function addUserOnline(email) {
+function addUserOnline(chatBoxDivId, email) {
+  setChatBoxDivId(chatBoxDivId);
   config.socket = io(socketUrl);
 
   config.currentUser = email;
@@ -131,4 +132,4 @@ function setChatBoxDivId(divId) {
   config.chatsContainerDivId = divId;
 }
 
-module.exports = { createChatBox, addUserOnline, setChatBoxDivId };
+module.exports = { createChatBox, addUserOnline };

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Filip's and Alex' Site</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="header">
+    <h1>Welcome to Filip's and Alex' Site</h1>
+    <h3>Infinite Scroll V2</h3>
+</header>
+<nav class="nav">
+    <ul>
+        <li><a href="./main.html">Home</a></li>
+        <li><a href="./chat_v1.html">Live Chat V1</a></li>
+        <li><a href="./chat_v2.html">Live Chat V2</a></li>
+        <li><a href="./inf_scroll_v1.html">InfiniteScroll V1</a></li>
+        <li><a class="current-page" href="./inf_scroll_v2.html">InfiniteScroll V2</a></li>
+    </ul>
+</nav>
+
+<div id="content" class="inf-scroll-content"></div>
+
+<footer class="footer">
+    <p>&copy; 2023 Filip's and Alex' Site. All rights reserved.</p>
+</footer>
+<script src="http://localhost:8080/api/web-nexus"></script>
+<script>
+  let currentPage = 1;
+  webNexus.setupInfiniteScrollV2('content',
+      '<div class="text-container">\n' +
+      '    <p class="p">{{joke}}</p>\n' +
+      '</div>',
+      '<style>\n' +
+      '    :root {\n' +
+      '        font-family: \'Arial\', sans-serif;\n' +
+      '        text-align: center;\n' +
+      '        margin: 50px;\n' +
+      '    }\n' +
+      '\n' +
+      '    .text-container {\n' +
+      '        display: flex;\n' +
+      '        justify-content: center;\n' +
+      '        align-items: center;\n' +
+      '        width: 600px;\n' +
+      '        height: 200px;\n' +
+      '        background-color: #fff;\n' +
+      '        padding: 20px;\n' +
+      '        border-radius: 8px;\n' +
+      '        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n' +
+      '        margin-bottom: 15px;\n' +
+      '\n' +
+      '        .p {\n' +
+      '            color: #333;\n' +
+      '            font-size: 18px;\n' +
+      '            line-height: 1.6;\n' +
+      '            font-weight: bold;\n' +
+      '        }\n' +
+      '    }\n' +
+      '</style>'
+  ).then(response => {
+
+    response
+        .before(() => {
+          const url = `https://icanhazdadjoke.com/search?limit=5&page=${currentPage}`;
+          console.log("before");
+          return fetch(url, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json'
+            }
+          })
+              .then(response => response.json())
+              .then(data => {
+                return data.results;
+              });
+        })
+        .after((replacementMap) => {
+          console.log("after");
+          currentPage++;
+        }).onError((error) => {
+      alert(error);
+    })
+        .start();
+  });
+</script>
+</body>
+</html>

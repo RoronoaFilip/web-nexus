@@ -85,7 +85,7 @@ class InfiniteScrollV2 extends InfiniteScroll {
           reject(err);
         });
       } else {
-        resolve(result);
+        reject(new Error('The before callback did not return a promise'));
       }
     })
       .then((replacementMap) => {

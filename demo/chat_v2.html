@@ -10,34 +10,31 @@
 <div id="auth-container"></div>
 <header class="header">
     <h1>Welcome to Filip's and Alex' Site</h1>
+    <h3>Live Chat V2</h3>
 </header>
 <nav class="nav">
     <ul>
-        <li><a class="current-page" href="./main.html">Home</a></li>
+        <li><a href="./main.html">Home</a></li>
         <li><a href="./chat_v1.html">Live Chat V1</a></li>
-        <li><a href="./chat_v2.html">Live Chat V2</a></li>
+        <li><a class="current-page" href="./chat_v2.html">Live Chat V2</a></li>
         <li><a href="./inf_scroll_v1.html">InfiniteScroll V1</a></li>
         <li><a href="./inf_scroll_v2.html">InfiniteScroll V2</a></li>
     </ul>
 </nav>
-<div class="container">
-    <h2 class="section-title">About Us</h2>
-    <p class="section-content">
-        Welcome to Filip's and Alex' Site!
-    </p>
-    <p class="section-content">
-        This is a demo site that presents Live Chat V1/V2, Infinite Scroll V1/V2
-    </p>
-</div>
-<div class="container">
-    <h2 class="section-title">Contact Us</h2>
-    <address class="section-content">
-        Email: <a href="mailto:info@example.com">fkfilchev@gmail.com</a><br>
-        Email: <a href="mailto:info@example.com">fkfilchev@gmail.com</a><br>
-    </address>
-</div>
+<chats-input-box></chats-input-box>
+<div id="chats-box" class="chats-box"></div>
 <footer class="footer">
     <p>&copy; 2023 Filip's and Alex' Site. All rights reserved.</p>
 </footer>
+<script src="http://localhost:8080/api/web-nexus"></script>
+<script>
+  const onSuccessfulLogin = (data) => {
+    const url = 'http://localhost:63342/web-nexus/sdk/pages/demo-page.html';
+    document.cookie = data.accessTokenCookie;
+    // window.location.replace(url);
+  }
+
+  webNexus.initializeAuthenticationContainer('auth-container', 'v2', 'chats-box', onSuccessfulLogin);
+</script>
 </body>
 </html>

@@ -1,0 +1,147 @@
+body {
+    background-color: #5D3FD3;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+}
+
+/* Header Styles */
+.header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.header h1 {
+    font-size: 36px;
+}
+
+/* Navigation Styles */
+.nav {
+    background-color: #333;
+    text-align: center;
+}
+
+.nav ul {
+    list-style-type: none;
+    padding: 10px;
+}
+
+.nav li {
+    display: inline;
+    margin: 0 20px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+    transition: color 0.3s;
+
+    &.current-page {
+        color: #5D3FD3;
+    }
+}
+
+.nav a:hover {
+    color: #5D3FD3;
+}
+
+/* Container Styles */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.section-title {
+    font-size: 24px;
+    color: #5D3FD3;
+}
+
+.section-content {
+    font-size: 18px;
+    color: #333;
+    margin-top: 10px;
+}
+
+.section-list {
+    list-style-type: square;
+}
+
+.section-list li {
+    color: black;
+    pointer-events: none;
+}
+
+.service-block h2 {
+    font-size: 24px;
+}
+
+.service-block p {
+    font-size: 16px;
+}
+
+/* Footer Styles */
+.footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .nav li {
+        display: block;
+        margin: 10px 0;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.container h2,
+.service-block h2 {
+    animation: fadeIn 1s;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    top: 5rem;
+}
+
+.inf-scroll-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.chats-box {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
