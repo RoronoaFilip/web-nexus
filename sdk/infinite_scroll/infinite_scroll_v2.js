@@ -14,7 +14,7 @@ class InfiniteScrollV2 extends InfiniteScroll {
    */
   // @Override
   setupV2(
-    divId, rawDiv, divStyling,
+    divId, rawDiv, divStyling = null,
   ) {
     return new Promise((resolve, reject) => {
       this.config.divId = divId;
@@ -28,7 +28,7 @@ class InfiniteScrollV2 extends InfiniteScroll {
         return;
       }
 
-      document.getElementById(divId).innerHTML += divStyling;
+      this.attachCss(divStyling);
 
       resolve(new CallbacksBuilder((callbacks) => {
         this.config = { ...this.config, ...callbacks };

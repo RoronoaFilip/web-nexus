@@ -8,6 +8,7 @@ const config = {
 
 const socketUrl = 'http://localhost:8081';
 const chatUrl = 'http://localhost:8080/api/chat';
+const cssUrl = 'http://localhost:8080/api/chat/css';
 
 /**
  * Append a message to the chat box of a recipient.
@@ -112,6 +113,16 @@ function fetchChatBox(recipient) {
     });
 }
 
+function attachStyling() {
+  fetch(cssUrl)
+    .then((result) => result.text())
+    .then((result) => {
+      const css = document.createElement('style');
+      css.textContent = result;
+      document.head.appendChild(css);
+    });
+}
+
 function addUserOnline(chatBoxDivId, email) {
   setChatBoxDivId(chatBoxDivId);
   config.socket = io(socketUrl);
@@ -122,6 +133,8 @@ function addUserOnline(chatBoxDivId, email) {
   config.socket.emit('store user', email);
 
   setUpReceive(config.socket);
+
+  attachStyling();
 }
 
 function createChatBox(recipient) {

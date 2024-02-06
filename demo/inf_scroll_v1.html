@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Filip's and Alex' Site</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            font-family: \'Arial\', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        .text-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 600px;
+            height: 200px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+
+            .p {
+                color: #333;
+                font-size: 18px;
+                line-height: 1.6;
+                font-weight: bold;
+            }
+        }
+    </style>
 </head>
 <body>
 <header class="header">
@@ -32,34 +59,7 @@
   webNexus.setupInfiniteScroll('content',
       '<div class="text-container">\n' +
       '    <p class="p">{{joke}}</p>\n' +
-      '</div>',
-      '<style>\n' +
-      '    :root {\n' +
-      '        font-family: \'Arial\', sans-serif;\n' +
-      '        text-align: center;\n' +
-      '        margin: 50px;\n' +
-      '    }\n' +
-      '\n' +
-      '    .text-container {\n' +
-      '        display: flex;\n' +
-      '        justify-content: center;\n' +
-      '        align-items: center;\n' +
-      '        width: 600px;\n' +
-      '        height: 200px;\n' +
-      '        background-color: #fff;\n' +
-      '        padding: 20px;\n' +
-      '        border-radius: 8px;\n' +
-      '        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n' +
-      '        margin-bottom: 15px;\n' +
-      '\n' +
-      '        .p {\n' +
-      '            color: #333;\n' +
-      '            font-size: 18px;\n' +
-      '            line-height: 1.6;\n' +
-      '            font-weight: bold;\n' +
-      '        }\n' +
-      '    }\n' +
-      '</style>'
+      '</div>'
   ).then(response => {
 
     response

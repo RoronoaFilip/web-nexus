@@ -28,7 +28,6 @@ function initializeAuthenticationContainer(divId, version, chatBoxDivId,
   onErrorCb = undefined,
   onServerError = undefined) {
   setUpLoginForm(divId, version, chatBoxDivId);
-  setUpRegisterForm(divId);
   setResponseEvents(onSuccessfulCb, onErrorCb, onServerError);
 }
 
@@ -46,9 +45,8 @@ function setUpLoginForm(divId, version, chatBoxDivId) {
 
       forms.loginForm = body;
     })
-    .then(() => {
-      setUpLoginEvent(version, chatBoxDivId);
-    })
+    .then(() => setUpLoginEvent(version, chatBoxDivId))
+    .then(() => setUpRegisterForm(divId))
     .catch((error) => {
       console.log('wrong');
       authEventHandler.onErrorHandler();
@@ -117,6 +115,7 @@ function setUpRegisterEvent() {
       .then((data) => {
         authEventHandler.onSuccessfulAuthenticationHandler(data);
         addUserOnline(email);
+        registerForm.parentElement.remove();
       })
       .catch(() => {
         authEventHandler.onServerErrorHandler();

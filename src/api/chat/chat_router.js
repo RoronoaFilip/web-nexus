@@ -29,4 +29,9 @@ router.post('/', (req, res) => {
   readStream.pipe(transformStream).pipe(res);
 });
 
+router.get('/css', (req, res) => {
+  const readStream = createFileReadStream(__dirname + '/../../pages/chat_box.css');
+  readStream.pipe(res);
+});
+
 module.exports = router;

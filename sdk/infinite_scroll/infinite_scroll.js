@@ -35,13 +35,12 @@ class InfiniteScroll {
    * @returns the ConfigResponse Object for setting the before and after callbacks
    */
   setup(
-    divId, rawDiv, divStyling,
+    divId, rawDiv, divStyling = null,
     replacementMap = null, url = null, method = null, headers = null, body = null
   ) {
     return new Promise((resolve, reject) => {
       this.config.divId = divId;
       this.config.rawDiv = rawDiv;
-      this.config.divStyling = divStyling;
       this.requestConfig = { replacementMap, url, method, headers, body };
 
       const errors = this.validateConfiguration(this.config, this.requestConfig);
@@ -51,8 +50,7 @@ class InfiniteScroll {
         return;
       }
 
-      document.getElementById(divId).innerHTML += divStyling;
-
+      this.attachCss(divStyling);
 
       resolve(new CallbacksBuilder((callbacks) => {
         this.config = { ...this.config, ...callbacks };
@@ -61,6 +59,16 @@ class InfiniteScroll {
         this.config.load();
       }));
     });
+  }
+
+  attachCss(divStyling) {
+    if (divStyling) {
+      if (!divStyling.match(divStylingRegex)) {
+        divStyling = `<style>${divStyling}</style>`;
+      }
+      document.head.innerHTML += divStyling;
+    }
+    return divStyling;
   }
 
   handleKey(key, value, replacementMap, rawDiv) {
@@ -202,10 +210,6 @@ class InfiniteScroll {
     }
 
     if (!config.rawDiv || !config.rawDiv.match(rawDivRegex)) {
-      errors.push(new Error('Invalid Raw Div'));
-    }
-
-    if (!config.divStyling || !config.divStyling.match(divStylingRegex)) {
       errors.push(new Error('Invalid Raw Div'));
     }
 

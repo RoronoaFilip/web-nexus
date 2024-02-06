@@ -182,52 +182,43 @@ it checks this table to determine which seeds have already been applied.
 
 ## Versions
 
-### Version 1.8.0
+### Version 1.8.1
+- Attach CSS to head. Fix EventListeners setup in Login/Register Form.
 
+### Version 1.8.0
 - Add Live Chat V2
 
 ### Version 1.7.1
-
 - Adapt Infinite Scroll V1/V2 to classes. V2 extends V1.
 
 ### Version 1.7.0
-
 - Add Infinite Scroll V2
 
 ### Version 1.6.1
-
 - Fix Authentication Bugs
 
 ### Version 1.6.0
-
 - Create authentication with JWT. Add Register, Login and Authentication Logic in SDK and Backend.
 
 ### Version 1.5.0
-
 - Create Infinite Scroll V2. Extract shared Infinite Scroll Logic in common.js.
 
 ### Version 1.4.0
-
 - Add migrations and seeds with Knex.
 
 ### Version 1.3.1
-
 - Move Config Files to a Config Directory.
 
 ### Version 1.3.0
-
 - Added Postgress DB Dockerfile and docker-compose.
 
 ### Version 1.2.0
-
 - Restructured the Directory Hierarchy.
 - Added a Router Logic for the API.
 - Added Initial Version of the Infinite Scroll Functionality.
 
 ### Version 1.1.0
-
 - Added Live Chat Functionality.
 
 ### Version 1.0.0
-
 - Initial commit.
