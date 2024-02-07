@@ -183,7 +183,12 @@ class InfiniteScroll {
       headers: this.requestConfig.headers || { 'Accept': 'application/json' },
       body: this.requestConfig.body && JSON.stringify(this.requestConfig.body),
     })
-      .then(body => body.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(response);
+      })
       .then(response => {
         if (Array.isArray(response)) {
           this.handleArray(response, this.requestConfig.replacementMap);

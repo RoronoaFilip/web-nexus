@@ -1,0 +1,18 @@
+<nav class="nav">
+    <ul>
+        <li><a href="/main">Home</a></li>
+        <li><a href="/chat_v1">Live Chat V1</a></li>
+        <li><a href="/chat_v2">Live Chat V2</a></li>
+        <li><a href="/inf_scroll_v1">InfiniteScroll V1</a></li>
+        <li><a href="/inf_scroll_v2">InfiniteScroll V2</a></li>
+    </ul>
+</nav>
+<script>
+    const nav = document.querySelector('.nav');
+    const links = nav.querySelectorAll('a');
+    links.forEach(link => {
+        if (link.href === window.location.href) {
+            link.classList.add('current-page');
+        }
+    });
+</script>

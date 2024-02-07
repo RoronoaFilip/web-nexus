@@ -182,6 +182,9 @@ it checks this table to determine which seeds have already been applied.
 
 ## Versions
 
+### Version 1.8.2
+- Add Successful Request check in all fetch calls. Make Demo an ejs app.
+
 ### Version 1.8.1
 - Attach CSS to head. Fix EventListeners setup in Login/Register Form.
 

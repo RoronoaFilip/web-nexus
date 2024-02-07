@@ -30,9 +30,10 @@ class AppChats extends HTMLElement {
 
   getTemplate() {
     return html`
-        <input ${ref(this.#inputRef)} type="text" placeholder="enter username"/>
-        <button @click=${this.renderChat.bind(this)}>Start Chat</button>
-        <div>Chats</div>
+        <form @submit=${this.onSubmit.bind(this)}>
+            <input ${ref(this.#inputRef)} type="text" placeholder="enter username"/>
+            <button>Start Chat</button>
+        </form>
         <div id="chats"></div>
     `;
   }
@@ -40,6 +41,11 @@ class AppChats extends HTMLElement {
   setCurrentUser(email) {
     this.currentUser = email;
     this.#socket.emit('store user', email);
+  }
+
+  onSubmit(event) {
+    event.preventDefault();
+    this.renderChat();
   }
 
   renderChat(newChatRecipient = null) {

@@ -68,6 +68,15 @@ body {
     font-size: 18px;
     color: #333;
     margin-top: 10px;
+
+    &.address {
+        color: white;
+        text-decoration: none;
+
+        a {
+            color: #5D3FD3;
+        }
+    }
 }
 
 .section-list {

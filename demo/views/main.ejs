@@ -4,22 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Filip's and Alex' Site</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="http://localhost:8080/api/web-nexus"></script>
 </head>
 <body>
 <div id="auth-container"></div>
 <header class="header">
     <h1>Welcome to Filip's and Alex' Site</h1>
 </header>
-<nav class="nav">
-    <ul>
-        <li><a class="current-page" href="./main.html">Home</a></li>
-        <li><a href="./chat_v1.html">Live Chat V1</a></li>
-        <li><a href="./chat_v2.html">Live Chat V2</a></li>
-        <li><a href="./inf_scroll_v1.html">InfiniteScroll V1</a></li>
-        <li><a href="./inf_scroll_v2.html">InfiniteScroll V2</a></li>
-    </ul>
-</nav>
+<%- include('navbar') %>
+
+
 <div class="container">
     <h2 class="section-title">About Us</h2>
     <p class="section-content">
@@ -29,15 +24,18 @@
         This is a demo site that presents Live Chat V1/V2, Infinite Scroll V1/V2
     </p>
 </div>
-<div class="container">
-    <h2 class="section-title">Contact Us</h2>
-    <address class="section-content">
-        Email: <a href="mailto:info@example.com">fkfilchev@gmail.com</a><br>
-        Email: <a href="mailto:info@example.com">fkfilchev@gmail.com</a><br>
-    </address>
-</div>
+
+<% if (file) { %>
+    <%- include(file) %>
+<% } %>
+
 <footer class="footer">
     <p>&copy; 2023 Filip's and Alex' Site. All rights reserved.</p>
+    <address class="section-content address">
+        Contact us via:<br>
+        Email: <a href="mailto:fkfilchev@gmail.com">fkfilchev@gmail.com</a><br>
+        Email: <a href="mailto:fkfilchev@gmail.com">fkfilchev@gmail.com</a><br>
+    </address>
 </footer>
 </body>
 </html>

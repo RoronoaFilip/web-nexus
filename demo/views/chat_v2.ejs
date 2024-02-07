@@ -1,0 +1,11 @@
+<chats-input-box></chats-input-box>
+<div id="chats-box" class="chats-box"></div>
+<script>
+  const onSuccessfulLogin = (data) => {
+    const url = '/main';
+    document.cookie = data.accessTokenCookie;
+    // window.location.replace(url);
+  }
+
+  webNexus.initializeAuthenticationContainer('auth-container', 'v2', 'chats-box', onSuccessfulLogin);
+</script>

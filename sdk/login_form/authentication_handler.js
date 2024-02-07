@@ -33,7 +33,12 @@ function initializeAuthenticationContainer(divId, version, chatBoxDivId,
 
 function setUpLoginForm(divId, version, chatBoxDivId) {
   fetch(loginFormUrl)
-    .then((result) => result.text())
+    .then(response => {
+      if (response.ok) {
+        return response.text();
+      }
+      return Promise.reject(response);
+    })
     .then((body) => {
       if (divId) {
         document.getElementById(divId).innerHTML = body;
@@ -56,7 +61,7 @@ function setUpLoginForm(divId, version, chatBoxDivId) {
 function setUpLoginEvent(version, chatBoxDivId) {
   const onSuccessfulAuthenticationCb = version === 'v2' ? renderAppChats : addUserOnline;
   const loginForm = document.getElementById('web-nexus-auth-form');
-  loginForm.addEventListener('submit', async function (event) {
+  loginForm.addEventListener('submit', function (event) {
     event.preventDefault();
     const email = document.getElementById('web-nexus-email-input')
       .value.trim();
@@ -82,7 +87,12 @@ function setUpRegisterForm(divId) {
   switchToRegisterButton?.addEventListener("click", function (event) {
     event.preventDefault();
     fetch(registerFormUrl)
-      .then((result) => result.text())
+      .then(response => {
+        if (response.ok) {
+          return response.text();
+        }
+        return Promise.reject(response);
+      })
       .then((body) => {
         const authContainerDiv = document.getElementById(divId);
         authContainerDiv.innerHTML = body;

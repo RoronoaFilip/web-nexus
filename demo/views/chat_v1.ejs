@@ -1,0 +1,25 @@
+<div>
+    <form id="new-chat-form">
+        <label>
+            <input id="chat-recipient-input" type="text" placeholder="Start Chat With">
+        </label>
+        <button>Start Chat</button>
+    </form>
+</div>
+<div class="chats-box" id="chat-container"></div>
+<script>
+  const onSuccessfulLogin = (data) => {
+    const url = '/main';
+    document.cookie = data.accessTokenCookie;
+    // window.location.href = url;
+  }
+
+  webNexus.initializeAuthenticationContainer('auth-container', 'v1', 'chat-container', onSuccessfulLogin);
+  document.getElementById('new-chat-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    let input = event.target.querySelector('#chat-recipient-input');
+    const recipient = input.value.trim();
+    input.value = '';
+    webNexus.createChatBox(recipient);
+  });
+</script>
