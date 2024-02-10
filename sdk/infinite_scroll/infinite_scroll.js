@@ -251,7 +251,6 @@ class CallbacksBuilder {
     onSuccess: undefined, // gets called when the request is successful
     onError: undefined, // gets called when an error occurs
     after: undefined, // gets called after the request is made
-    load: undefined,
   };
 
   constructor(configCallback) {

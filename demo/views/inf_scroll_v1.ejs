@@ -31,9 +31,9 @@
 <script>
   let currentPage = 1;
   webNexus.setupInfiniteScroll('content',
-      '<div class="text-container">\n' +
-      '    <p class="p">{{joke}}</p>\n' +
-      '</div>'
+      `<div class="text-container">
+            <p class="p">{{joke}}</p>
+        </div>`
   ).then(response => {
 
     response

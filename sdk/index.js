@@ -1,9 +1,8 @@
-const { createChatBox } = require('./chat/v1/chat_handlers');
-const { goToLoginForm, initializeAuthenticationContainer } = require('./login_form/authentication_handler');
-const  setupInfiniteScroll  = require('./infinite_scroll/infinite_scroll').setupFunction;
-const  setupInfiniteScrollV2  = require('./infinite_scroll/infinite_scroll_v2').setupFunction;
-require('./chat/v2/app-chats');
-require('./chat/v2/app-chat');
+import './chat/v2/app-chats-input';
+import { setupFunction as setupInfiniteScroll } from './infinite_scroll/infinite_scroll';
+import { setupFunction as setupInfiniteScrollV2 } from './infinite_scroll/infinite_scroll_v2';
+import { createChatBox } from './chat/v1/chat_handlers';
+import { goToLoginForm, initializeAuthenticationContainer } from './login_form/authentication_handler';
 
 const webNexus = {
   createChatBox,
@@ -12,6 +11,5 @@ const webNexus = {
   setupInfiniteScroll,
   setupInfiniteScrollV2,
 };
-
 
 window.webNexus = webNexus;

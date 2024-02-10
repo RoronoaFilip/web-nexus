@@ -16,7 +16,7 @@ app.use((req, res, next) => {
 app.get('/:file', (req, res) => {
   let options = {
     file: req.params.file || 'main'
-  }
+  };
 
   if (req.params.file === 'main') {
     options.file = undefined;

@@ -1,5 +1,5 @@
 function renderAppChats(chatsDivId, currentUserEmail) {
-  const chatsApp = document.createElement('app-chats');
+  const chatsApp = document.createElement('app-chats-input');
   chatsApp.chatsDiv = document.getElementById(chatsDivId) || chatsApp;
   chatsApp.setCurrentUser(currentUserEmail);
 

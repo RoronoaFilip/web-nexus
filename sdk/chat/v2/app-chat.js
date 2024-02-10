@@ -1,7 +1,7 @@
-const styles = require('./app-chat.css');
 const { html, render } = require('lit-html');
 const { createRef, ref } = require("lit-html/directives/ref.js");
 const { when } = require("lit-html/directives/when.js");
+const styles = require('./app-chat.css');
 
 class AppChat extends HTMLElement {
   messages = []; // {"type": "received/sent", "message": "string"}
@@ -13,7 +13,7 @@ class AppChat extends HTMLElement {
 
   constructor() {
     super();
-    this.#showRoot = this.attachShadow({ mode: 'open' });
+    this.#showRoot = this.attachShadow({ mode: 'closed' });
   }
 
   getTemplate() {
@@ -23,7 +23,9 @@ class AppChat extends HTMLElement {
         <style>${styles.default.toString()}</style>
         <div class="chat-box">
             <div class="chat-header">Chat with ${this.them}
-                <button class="close-button" @click="${() => document.getElementById(`chatBox${this.them}`)?.remove()}">X</button>
+                <button class="close-button" @click="${() => document.getElementById(`chatBox${this.them}`)?.remove()}">
+                    X
+                </button>
             </div>
             <div class="chat-messages" id="chatMessages${this.them}">
                 ${when(this.messages.length > 0, renderMessages)}

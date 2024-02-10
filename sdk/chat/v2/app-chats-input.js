@@ -2,7 +2,9 @@ const { html, render } = require('lit-html');
 const io = require("socket.io-client");
 const { createRef, ref } = require("lit-html/directives/ref.js");
 
-class AppChats extends HTMLElement {
+import './app-chat';
+
+class AppChatsInput extends HTMLElement {
   socketUrl = 'http://localhost:8081';
   openChatUsernames = [];
   #socket;
@@ -14,13 +16,15 @@ class AppChats extends HTMLElement {
   constructor() {
     super();
 
-    this.#showRoot = this.attachShadow({ mode: 'open' });
+    this.#showRoot = this.attachShadow({ mode: 'closed' });
+
     this.#socket = io(this.socketUrl);
     this.#socket.on("receive private message", (messageObject) => {
       const { from, to, message } = messageObject;
       let chatBox = document.getElementById(`chatBox${from}`);
-      !chatBox && this.renderChat(from);
-      chatBox = document.getElementById(`chatBox${from}`);
+      if (!chatBox) {
+        chatBox = this.renderChat(from);
+      }
       chatBox.receiveMessage(message);
     });
     this.#socket.on("private message error", (error) => {
@@ -31,7 +35,7 @@ class AppChats extends HTMLElement {
   getTemplate() {
     return html`
         <form @submit=${this.onSubmit.bind(this)}>
-            <input ${ref(this.#inputRef)} type="text" placeholder="enter username"/>
+            <input ${ref(this.#inputRef)} type="text" placeholder="enter email"/>
             <button>Start Chat</button>
         </form>
         <div id="chats"></div>
@@ -64,6 +68,8 @@ class AppChats extends HTMLElement {
 
     this.chatsDiv.appendChild(chat);
     chat.render();
+
+    return chat;
   }
 
   render() {
@@ -72,4 +78,4 @@ class AppChats extends HTMLElement {
 
 }
 
-customElements.define("app-chats", AppChats);
+customElements.define("app-chats-input", AppChatsInput);

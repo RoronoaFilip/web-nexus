@@ -9,7 +9,7 @@ const backendRegisterEndpoint = 'http://localhost:8080/api/authentication/regist
 
 const authEventHandler = {
   onSuccessfulAuthenticationHandler: defaultOnSuccessfulAuthenticationHandler,
-  onErrorHandler: () => {
+  onErrorHandler: (error) => {
     alert('Wrong email or password!');
   },
   onServerErrorHandler: () => {
@@ -54,7 +54,7 @@ function setUpLoginForm(divId, version, chatBoxDivId) {
     .then(() => setUpRegisterForm(divId))
     .catch((error) => {
       console.log('wrong');
-      authEventHandler.onErrorHandler();
+      authEventHandler.onErrorHandler(error);
     });
 }
 
@@ -76,7 +76,7 @@ function setUpLoginEvent(version, chatBoxDivId) {
         onSuccessfulAuthenticationCb(chatBoxDivId, email);
         loginForm.parentElement.remove();
       })
-      .catch(() => {
+      .catch((error) => {
         authEventHandler.onErrorHandler();
       });
   });
