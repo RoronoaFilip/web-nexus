@@ -61,6 +61,14 @@ function getMessagesToJsonArray(id) {
   })
 }
 
+function clearChatInRedis(from, to, id) {
+  const key = getExactKey(from, to);
+  // Delete the chat details
+  redisClient.del(key);
+  // Delete the chat itself
+  redisClient.del(id);
+}
+
 function saveChatInDb(from, to) {
   return new Promise(async (resolve, reject) => {
     const chatId = await getChatDetails(from, to);
@@ -70,6 +78,7 @@ function saveChatInDb(from, to) {
         .into('chat_details');
 
     if (result) {
+      clearChatInRedis(from, to, chatId);
       resolve('Chat was successfully saved  in db!');
     } else {
       reject('Saving in DB caused an error!');
