@@ -18,12 +18,9 @@ function setChatDetails(from, to, id) {
     }
 
     const key = getExactKey(from, to);
-    const chatDetails = {
-      chatId: uuidv4(),
-      countMessages: 0
-    };
-    const stringChatDetails = JSON.stringify(chatDetails);
-    redisClient.set(key, stringChatDetails)
+    debugger;
+    const chatId = uuidv4();
+    redisClient.set(key, chatId)
         .then(() => resolve('Successfully Set!'))
         .catch((error) => reject('Redis return the following error: ', error));
   })
@@ -39,11 +36,10 @@ function getChatDetails(from, to) {
 }
 
 async function saveMessageInRedis(from, to, message) {
-  const chatDetailsRaw = await getChatDetails(from, to);
-  const chatDetails = JSON.parse(chatDetailsRaw);
-  console.log('Chat id: ', chatDetails.chatId);
-  console.log('messages: ', chatDetails.countMessages);
-  return redisService.addMessage(chatDetails.chatId, from, chatDetails.countMessages + 1, message)
+  const chatId = await getChatDetails(from, to);
+  // const chatDetails = JSON.parse(chatDetailsRaw);
+  console.log('Chat id: ', chatId);
+  return redisService.addMessage(chatId, from, message)
       .then((message) => {
         return message;
       })
@@ -67,11 +63,10 @@ function getMessagesToJsonArray(id) {
 
 function saveChatInDb(from, to) {
   return new Promise(async (resolve, reject) => {
-    const chatDetailsRaw = await getChatDetails(from, to);
-    const chatDetails = JSON.parse(chatDetailsRaw);
-    const messages = await getMessagesToJsonArray(chatDetails.chatId);
+    const chatId = await getChatDetails(from, to);
+    const messages = await getMessagesToJsonArray(chatId);
     const result = await db
-        .insert([{from: from, to: to, chat_id: chatDetails.chatId, chat: messages}])
+        .insert([{from: from, to: to, chat_id: chatId, chat: messages}])
         .into('chat_details');
 
     if (result) {

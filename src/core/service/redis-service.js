@@ -1,10 +1,9 @@
 const redisClient = require('../../config/in-memory/redis-client');
 
-function addMessage(chatId, from, messageId, message) {
+function addMessage(chatId, from, message) {
   return new Promise((resolve, reject) => {
     const raw = {
       from: from,
-      id: messageId,
       message: message
     };
     const messageObject = JSON.stringify(raw);
