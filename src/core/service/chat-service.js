@@ -1,0 +1,85 @@
+const redisService = require('../service/redis-service');
+const redisClient = require('../../config/in-memory/redis-client');
+const {v4: uuidv4} = require('uuid');
+
+// Data Base imports
+const knex = require('knex');
+const knexConfig = require('../../config/db/knexfile')[process.env.NODE_ENV || 'development'];
+const db = knex(knexConfig);
+
+
+function setChatDetails(from, to, id) {
+  return new Promise(async (resolve, reject) => {
+    const result = await getChatDetails(from, to);
+
+    if (result) {
+      resolve('Chat already set!');
+      return;
+    }
+
+    const key = getExactKey(from, to);
+    const chatDetails = {
+      chatId: uuidv4(),
+      countMessages: 0
+    };
+    const stringChatDetails = JSON.stringify(chatDetails);
+    redisClient.set(key, stringChatDetails)
+        .then(() => resolve('Successfully Set!'))
+        .catch((error) => reject('Redis return the following error: ', error));
+  })
+}
+
+function getChatDetails(from, to) {
+  return new Promise((resolve, reject) => {
+    const key = getExactKey(from, to);
+    redisClient.get(key)
+        .then((result) => resolve(result))
+        .catch((error) => reject(error))
+  });
+}
+
+async function saveMessageInRedis(from, to, message) {
+  const chatDetailsRaw = await getChatDetails(from, to);
+  const chatDetails = JSON.parse(chatDetailsRaw);
+  console.log('Chat id: ', chatDetails.chatId);
+  console.log('messages: ', chatDetails.countMessages);
+  return redisService.addMessage(chatDetails.chatId, from, chatDetails.countMessages + 1, message)
+      .then((message) => {
+        return message;
+      })
+      .catch((error) => alert(error));
+}
+
+function getExactKey(from, to) {
+  const usersArray = [from, to];
+  usersArray.sort();
+  return `${usersArray[0]}-${usersArray[1]}`;
+}
+
+function getMessagesToJsonArray(id) {
+  return new Promise((resolve, reject) => {
+    redisClient.lRange(id, 0, -1)
+        .then((result) => result.map(JSON.parse))
+        .then((messages) => resolve({messages}))
+        .catch((error) => reject(error));
+  })
+}
+
+function saveChatInDb(from, to) {
+  return new Promise(async (resolve, reject) => {
+    const chatDetailsRaw = await getChatDetails(from, to);
+    const chatDetails = JSON.parse(chatDetailsRaw);
+    const messages = await getMessagesToJsonArray(chatDetails.chatId);
+    const result = await db
+        .insert([{from: from, to: to, chat_id: chatDetails.chatId, chat: messages}])
+        .into('chat_details');
+
+    if (result) {
+      resolve('Chat was successfully saved  in db!');
+    } else {
+      reject('Saving in DB caused an error!');
+    }
+  })
+}
+
+module.exports = {saveMessageInRedis, setChatDetails, saveChatInDb};

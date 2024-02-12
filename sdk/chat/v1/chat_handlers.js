@@ -80,6 +80,7 @@ function setUpSocketCommunication(recipient) {
 function setUpReceive(socket) {
   // Receive private messages
   socket.on('receive private message', function (data) {
+    debugger;
     const { from, message } = data;
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message received-message';

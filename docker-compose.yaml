@@ -4,10 +4,16 @@ services:
   postgres:
     image: postgres:14-alpine
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=mypassword
       - POSTGRES_USER=web-nexus-db
       - POSTGRES_DB=webNexusDB
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    hostname: web-nexus-redis
