@@ -68,7 +68,6 @@ class AppChatsInput extends HTMLElement {
     this.#inputRef.value.value = '';
     this.openChatUsernames.push(recipient);
     const chat = document.createElement('app-chat');
-    debugger;
     chat.setMe(this.currentUser);
     chat.setRecipient(recipient);
     chat.onSend((messageObject) => {
