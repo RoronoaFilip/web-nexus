@@ -1,7 +1,9 @@
 const socketIO = require("socket.io");
+const chatService = require('../../core/service/chat-service');
 
 // Store user information and socket IDs
 const users = {};
+const chatsId = [];
 
 /**
  * Store user information and socket IDs
@@ -21,9 +23,14 @@ function configureSocketConnection(server) {
     /**
      * Handle private messages on send. Emits receive to the recipient or private message error to the sender.
      */
-    socket.on('send private message', (data) => {
+    socket.on('send private message', async (data) => {
       const { to, message, from } = data;
+
       const toSocket = users[to];
+
+      const value = await chatService.saveMessageInRedis(from, to, message);
+      console.log(value);
+
       if (toSocket) {
         toSocket.emit('receive private message', { from, message });
       } else {

@@ -1,6 +1,7 @@
-const { createTransformStream } = require("../../core/utils/file_streams/file_transform");
-const { responseHandlers } = require("../../core/utils/response_handlers");
-const { createFileReadStream } = require("../../core/utils/file_streams/file_read_stream");
+const {createTransformStream} = require("../../core/utils/file_streams/file_transform");
+const {responseHandlers} = require("../../core/utils/response_handlers");
+const {createFileReadStream} = require("../../core/utils/file_streams/file_read_stream");
+const chatService = require('../../core/service/chat-service');
 const router = require('express').Router();
 
 /**
@@ -11,6 +12,8 @@ router.post('/', (req, res) => {
   const replacementMap = {
     name: req.body.name,
   };
+
+  console.log('This is', chatService.dummy());
 
   const readStream = createFileReadStream(__dirname + '/../../pages/chat_box.html');
   const transformStream = createTransformStream(replacementMap);
@@ -33,5 +36,25 @@ router.get('/css', (req, res) => {
   const readStream = createFileReadStream(__dirname + '/../../pages/chat_box.css');
   readStream.pipe(res);
 });
+
+router.post('/set-chat-details', (req, res) => {
+  const {from, to} = req.body;
+  chatService.setChatDetails(from, to, 0)
+      .then((message) => {
+        res.status(200).send(message);
+      }).catch((message) => {
+    res.status(400).send(message);
+  });
+});
+
+router.post('/save-chat', (req, res) => {
+  const {from, to} = req.body;
+  chatService.saveChatInDb(from, to)
+      .then((message) => {
+        res.status(200).send(message);
+      }).catch((errorMessage) => {
+        res.status(500).send(errorMessage);
+  })
+})
 
 module.exports = router;
