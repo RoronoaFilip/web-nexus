@@ -12,9 +12,8 @@ const authEventHandler = {
   onErrorHandler: (error) => {
     alert('Wrong email or password!');
   },
-  onServerErrorHandler: () => {
-    const url = 'http://localhost:63342/web-nexus/sdk/pages/internal-server-error.html';
-    window.location.replace(url);
+  onServerErrorHandler: (error) => {
+    console.error(JSON.stringify(error));
   }
 };
 
