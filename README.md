@@ -182,6 +182,9 @@ it checks this table to determine which seeds have already been applied.
 
 ## Versions
 
+### Version 1.9.0
+- Save chat in DB and Redis.
+
 ### Version 1.8.3
 - Use import instead of require when importing a module and not a library.
 
