@@ -16,14 +16,16 @@ const config = {
       },
       {
         test: /\.css$/i,
-        use: [ 'css-loader' ],
-      },
-      {
-        test: /\.s[ac]ss$/i,
-        use: [ 'css-loader', 'sass-loader' ],
+        loader: "css-loader",
+        // we cannot use the style-loader here because it uses the window object, and we are using the shadow dom
       },
     ],
   },
+  resolve: {
+    fallback: {
+      crypto: false
+    }
+  }
 };
 
 module.exports = () => {
