@@ -8,15 +8,14 @@ function addMessage(chatId, from, message) {
     };
     const messageObject = JSON.stringify(raw);
 
-    console.log(chatId);
-
     redisClient.rPush(chatId, messageObject)
-        .then(() => resolve('Successful stored message!'))
-        .catch((error) => reject(error))
-  })
+      .then(() => resolve('Successful stored message!'))
+      .catch((error) => reject(error));
+  });
 }
 
 function getMessages(chatId) {
+  //!!! missing return statement
   redisClient.lrange(chatId, 0, -1, (err, messages) => {
     if (err) {
       console.error(err);

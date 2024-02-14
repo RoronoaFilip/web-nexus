@@ -8,8 +8,8 @@ exports.up = function(knex) {
     table.string('from', 70).unique();
     table.string('to', 70).unique();
     table.integer('chat_id').unique();
-    table.json("chat")
-  })
+    table.json("chat");
+  });
 };
 
 /**

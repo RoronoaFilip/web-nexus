@@ -1,9 +1,9 @@
 import './app-chat';
 
-const {html, render} = require('lit-html');
+const { html, render } = require('lit-html');
 const io = require("socket.io-client");
 const commons = require('../commons');
-const {createRef, ref} = require("lit-html/directives/ref.js");
+const { createRef, ref } = require("lit-html/directives/ref.js");
 
 
 class AppChatsInput extends HTMLElement {
@@ -19,12 +19,12 @@ class AppChatsInput extends HTMLElement {
   constructor() {
     super();
 
-    this.#showRoot = this.attachShadow({mode: 'closed'});
+    this.#showRoot = this.attachShadow({ mode: 'closed' });
 
     this.#socket = io(this.socketUrl);
     this.#socket.on("receive private message", (messageObject) => {
 
-      const {from, to, message} = messageObject;
+      const { from, to, message } = messageObject;
       let chatBox = document.getElementById(`chatBox${from}`);
       if (!chatBox) {
         chatBox = this.renderChat(from);
@@ -57,11 +57,11 @@ class AppChatsInput extends HTMLElement {
     const requestOptions = commons.constructChatRequestOptions(this.currentUser, recipient);
 
     fetch(this.setUpChatUrl, requestOptions)
-        .then(() => {
-          this.renderChat(recipient)
-        }).catch((response) => {
-      alert(response.message);
-    });
+      .then(() => {
+        this.renderChat(recipient);
+      }).catch((response) => {
+        alert(response.message);
+      });
   }
 
   renderChat(recipient) {
@@ -74,6 +74,14 @@ class AppChatsInput extends HTMLElement {
       if (messageObject.to !== messageObject.from) {
         this.#socket.emit("send private message", messageObject);
       }
+    });
+    chat.onClose((messageObject) => {
+      const index = this.openChatUsernames.indexOf(messageObject.to);
+      if (index > -1) {
+        this.openChatUsernames.splice(index, 1);
+      }
+
+      this.#socket.emit("save chat", messageObject);
     });
 
     this.chatsDiv.appendChild(chat);

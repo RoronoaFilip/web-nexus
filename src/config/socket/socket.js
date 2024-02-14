@@ -23,20 +23,22 @@ function configureSocketConnection(server) {
     /**
      * Handle private messages on send. Emits receive to the recipient or private message error to the sender.
      */
-    socket.on('send private message', async (data) => {
+    socket.on('send private message', (data) => {
       const { to, message, from } = data;
 
       const toSocket = users[to];
 
-      const value = await chatService.saveMessageInRedis(from, to, message);
-      console.log(value);
+      chatService.saveMessageInRedis(from, to, message)
+        .then((result) => {
+          console.log(result);
 
-      if (toSocket) {
-        toSocket.emit('receive private message', { from, message });
-      } else {
-        // Handle user not found
-        socket.emit('private message error', `User ${to} not found`);
-      }
+          if (toSocket) {
+            toSocket.emit('receive private message', { from, message });
+          } else {
+            socket.emit('private message error', `User ${to} not found`);
+          }
+        })
+        .catch(error => socket.emit('private message error', `An Error occurred while saving in redis: ${error}`));
     });
 
     // Store user information on connection
@@ -53,6 +55,10 @@ function configureSocketConnection(server) {
           delete users[key];
         }
       }
+    });
+
+    socket.on('save chat', ({ from, to }) => {
+      chatService.saveChatInDb(from, to);
     });
   });
 

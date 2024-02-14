@@ -12,4 +12,4 @@ function constructChatRequestOptions(from, to) {
   };
 }
 
-module.exports = { constructChatRequestOptions }
+module.exports = { constructChatRequestOptions };
