@@ -7,6 +7,7 @@ const {createRef, ref} = require("lit-html/directives/ref.js");
 
 class AppChatsInput extends HTMLElement {
   socketUrl = 'http://localhost:8081';
+  getMessagesUrl = 'http://localhost:8081/api/chat/get-messages';
   openChatUsernames = [];
   #socket;
   #showRoot;
@@ -32,10 +33,6 @@ class AppChatsInput extends HTMLElement {
     this.#socket.on("private message error", (error) => {
       alert(error);
     });
-    this.#socket.on('load chat', (messages) => {
-      const chat = document.createElement('app-chat');
-      console.log(messages);
-    });
   }
 
   getTemplate() {
@@ -60,8 +57,15 @@ class AppChatsInput extends HTMLElement {
       from: this.currentUser,
       to: recipient
     };
-    this.#socket.emit('set chat', requestObject);
+    this.#socket.emit('load chat', requestObject);
     this.renderChat(recipient);
+    fetch(this.getMessagesUrl, requestObject)
+        .then((messages) => {
+          console.log(messages)
+        })
+        .catch((error) => {
+          alert(error);
+        })
   }
 
   renderChat(recipient) {

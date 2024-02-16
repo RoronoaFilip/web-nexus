@@ -14,7 +14,7 @@ function setChatDetails(from, to, id) {
         if (result) {
           return Promise.resolve('Chat already set!');
         }
-
+        debugger;
         const key = getExactKey(from, to);
         const chatId = uuidv4();
         redisClient.set(key, chatId)
@@ -48,10 +48,11 @@ function getExactKey(from, to) {
 }
 
 function getMessagesToJsonArray(id) {
+  debugger;
   return new Promise((resolve, reject) => {
     redisClient.lRange(id, 0, -1)
         .then((result) => result.map(JSON.parse))
-        .then((messages) => resolve({messages}))
+        .then((messages) => resolve({ messages }))
         .catch((error) => reject(error));
   });
 }
@@ -68,11 +69,11 @@ function saveChatInDb(from, to) {
   return getChatDetails(from, to)
       .then((chatId) =>
           getMessagesToJsonArray(chatId)
-              .then((messages) => Promise.resolve({chatId, messages}))
+              .then((messages) => Promise.resolve({ chatId, messages }))
               .catch((error) => Promise.reject(error))
       )
-      .then(async ({chatId, messages}) => {
-
+      .then(async ({ chatId, messages }) => {
+        debugger;
         // TODO loading the chat from the database
         const usersArray = [from, to];
         usersArray.sort();
@@ -100,7 +101,7 @@ function saveChatInDb(from, to) {
               })
         } else {
           const result = await db.insert(
-              [{from: usersArray[0], to: usersArray[1], chat_id: chatId.chatId, chat: messages}])
+              [{from: usersArray[0], to: usersArray[1], chat_id: chatId, chat: messages}])
               .into('chat_details');
           if (!result) {
             return Promise.reject('Saving in DB caused an error!');
@@ -115,5 +116,19 @@ function mergeChats(oldChat, newChat) {
   return oldChat.messages.concat(newChat.messages);
 }
 
+async function getMessages(from, to) {
+  const chat = await db('chat_details')
+      .select('*')
+      .where({
+        from: from,
+        to: to
+      }).first();
 
-module.exports = {saveMessageInRedis, setChatDetails, saveChatInDb};
+  if (chat) {
+    return chat.chat;
+  }
+
+  return null;
+}
+
+module.exports = {saveMessageInRedis, setChatDetails, saveChatInDb, getMessages};

@@ -24,21 +24,21 @@ function configureSocketConnection(server) {
      * Handle private messages on send. Emits receive to the recipient or private message error to the sender.
      */
     socket.on('send private message', (data) => {
-      const { to, message, from } = data;
+      const {to, message, from} = data;
 
       const toSocket = users[to];
 
       chatService.saveMessageInRedis(from, to, message)
-        .then((result) => {
-          console.log(result);
+          .then((result) => {
+            console.log(result);
 
-          if (toSocket) {
-            toSocket.emit('receive private message', { from, message });
-          } else {
-            socket.emit('private message error', `User ${to} not found`);
-          }
-        })
-        .catch(error => socket.emit('private message error', `An Error occurred while saving in redis: ${error}`));
+            if (toSocket) {
+              toSocket.emit('receive private message', {from, message});
+            } else {
+              socket.emit('private message error', `User ${to} not found`);
+            }
+          })
+          .catch(error => socket.emit('private message error', `An Error occurred while saving in redis: ${error}`));
     });
 
     // Store user information on connection
@@ -49,7 +49,7 @@ function configureSocketConnection(server) {
     // Handle disconnect
     socket.on('disconnect', () => {
       // Remove user information on disconnect
-      for (const [ key, value ] of Object.entries(users)) {
+      for (const [key, value] of Object.entries(users)) {
         if (value === socket) {
           console.log(`User with Username: ${key} has disconnected`);
           delete users[key];
@@ -57,13 +57,13 @@ function configureSocketConnection(server) {
       }
     });
 
-    socket.on('save chat', ({ from, to }) => {
+    socket.on('save chat', ({from, to}) => {
       chatService.saveChatInDb(from, to);
     });
 
-    socket.on('set chat', (body) => {
-
-      const { from, to } = body;
+    socket.on('load chat', (body) => {
+      console.log('here we emit the chat')
+      const {from, to} = body;
       chatService.setChatDetails(from, to, 0)
           .then((response) => console.log(respose))
           .catch((error) => console.log(error));
@@ -73,4 +73,4 @@ function configureSocketConnection(server) {
   return io;
 }
 
-module.exports = { configureSocketConnection };
+module.exports = {configureSocketConnection};

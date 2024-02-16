@@ -44,5 +44,16 @@ router.post('/set-chat-details', (req, res) => {
     .catch((message) => res.status(400).send(message));
 });
 
+router.post('/get-messages', async (req, res) => {
+  const {from, to} = req.body;
+  const messages = await chatService.getMessages(from, to)
+
+  if (messages) {
+    res.status(200).send(messages);
+    return;
+  }
+
+  res.status(404).send('User/s not found!');
+})
 
 module.exports = router;
