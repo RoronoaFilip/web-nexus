@@ -86,7 +86,6 @@ class AppChat extends HTMLElement {
     this.onCloseCb({ from: this.me, to: this.them });
   }
 
-
   render() {
     render(this.getTemplate(this), this.#showRoot);
   }
