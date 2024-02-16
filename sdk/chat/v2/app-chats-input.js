@@ -1,14 +1,12 @@
 import './app-chat';
 
-const { html, render } = require('lit-html');
+const {html, render} = require('lit-html');
 const io = require("socket.io-client");
-const commons = require('../commons');
-const { createRef, ref } = require("lit-html/directives/ref.js");
+const {createRef, ref} = require("lit-html/directives/ref.js");
 
 
 class AppChatsInput extends HTMLElement {
   socketUrl = 'http://localhost:8081';
-  setUpChatUrl = 'http://localhost:8080/api/chat/set-chat-details';
   openChatUsernames = [];
   #socket;
   #showRoot;
@@ -19,12 +17,12 @@ class AppChatsInput extends HTMLElement {
   constructor() {
     super();
 
-    this.#showRoot = this.attachShadow({ mode: 'closed' });
+    this.#showRoot = this.attachShadow({mode: 'closed'});
 
     this.#socket = io(this.socketUrl);
     this.#socket.on("receive private message", (messageObject) => {
 
-      const { from, to, message } = messageObject;
+      const {from, to, message} = messageObject;
       let chatBox = document.getElementById(`chatBox${from}`);
       if (!chatBox) {
         chatBox = this.renderChat(from);
@@ -33,6 +31,10 @@ class AppChatsInput extends HTMLElement {
     });
     this.#socket.on("private message error", (error) => {
       alert(error);
+    });
+    this.#socket.on('load chat', (messages) => {
+      const chat = document.createElement('app-chat');
+      console.log(messages);
     });
   }
 
@@ -54,14 +56,12 @@ class AppChatsInput extends HTMLElement {
   onSubmit(event) {
     event.preventDefault();
     const recipient = this.#inputRef.value.value;
-    const requestOptions = commons.constructChatRequestOptions(this.currentUser, recipient);
-
-    fetch(this.setUpChatUrl, requestOptions)
-      .then(() => {
-        this.renderChat(recipient);
-      }).catch((response) => {
-        alert(response.message);
-      });
+    const requestObject = {
+      from: this.currentUser,
+      to: recipient
+    };
+    this.#socket.emit('set chat', requestObject);
+    this.renderChat(recipient);
   }
 
   renderChat(recipient) {
@@ -70,6 +70,7 @@ class AppChatsInput extends HTMLElement {
     const chat = document.createElement('app-chat');
     chat.setMe(this.currentUser);
     chat.setRecipient(recipient);
+    chat
     chat.onSend((messageObject) => {
       if (messageObject.to !== messageObject.from) {
         this.#socket.emit("send private message", messageObject);
