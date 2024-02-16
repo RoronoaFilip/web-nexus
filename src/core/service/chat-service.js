@@ -35,6 +35,7 @@ function getChatDetails(from, to) {
 function saveMessageInRedis(from, to, message) {
   return getChatDetails(from, to)
       .then((chatId) => {
+
         console.log(`Chat id: ${chatId}`);
         return redisService.addMessage(chatId, from, message);
       });
@@ -56,9 +57,9 @@ function getMessagesToJsonArray(id) {
 }
 
 function clearChatInRedis(from, to, id) {
-  const key = getExactKey(from, to); // TODO: Deleting Deleted chat causes error
-  // Delete the chat details
-  redisClient.del(key);
+  // const key = getExactKey(from, to);
+  // // Delete the chat details
+  // redisClient.del(key);
   // Delete the chat itself
   redisClient.del(id);
 }
@@ -73,10 +74,9 @@ function saveChatInDb(from, to) {
       .then(async ({chatId, messages}) => {
 
         // TODO loading the chat from the database
-        // TODO fix saving of chat( think about from, to columns)
         const usersArray = [from, to];
         usersArray.sort();
-        debugger;
+
         const chat = await db('chat_details')
             .select('*')
             .where({
@@ -84,9 +84,14 @@ function saveChatInDb(from, to) {
               to: usersArray[1]
             }).first();
 
+        debugger;
+        if (messages.length === 0) {
+          return;
+        }
+
         if (chat) {
           messages.messages = mergeChats(chat.chat, messages);
-          const newChat = await db('chat_details')
+          await db('chat_details')
               .where({
                 from: usersArray[0],
                 to: usersArray[1]
@@ -95,19 +100,22 @@ function saveChatInDb(from, to) {
                 chat: messages
               })
         } else {
-          const result = await db.insert([{from: usersArray[0], to: usersArray[1], chat_id: chatId, chat: messages}])
+          const result = await db.insert(
+              [{from: usersArray[0], to: usersArray[1], chat_id: chatId.chatId, chat: messages}])
               .into('chat_details');
-          if (result) {
-            // clearChatInRedis(from, to, chatId);
-            return Promise.resolve('Chat was successfully saved  in db!');
+          if (!result) {
+            return Promise.reject('Saving in DB caused an error!');
           }
-          return Promise.reject('Saving in DB caused an error!');
         }
+
+        clearChatInRedis(usersArray[0], usersArray[1], chatId);
       });
 }
 
 function mergeChats(oldChat, newChat) {
   return oldChat.messages.concat(newChat.messages);
 }
+
+
 
 module.exports = {saveMessageInRedis, setChatDetails, saveChatInDb};
