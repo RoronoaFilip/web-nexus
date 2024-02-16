@@ -33,6 +33,7 @@ class AppChatsInput extends HTMLElement {
       alert(error);
     });
     this.#socket.on('load chat', (messages) => {
+      const chat = document.createElement('app-chat');
       console.log(messages);
     });
   }

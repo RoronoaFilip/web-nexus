@@ -62,7 +62,7 @@ function configureSocketConnection(server) {
     });
 
     socket.on('set chat', (body) => {
-      
+
       const { from, to } = body;
       chatService.setChatDetails(from, to, 0)
           .then((response) => console.log(respose))

@@ -83,8 +83,7 @@ function saveChatInDb(from, to) {
               from: usersArray[0],
               to: usersArray[1]
             }).first();
-
-        debugger;
+        
         if (messages.length === 0) {
           return;
         }
@@ -115,7 +114,6 @@ function saveChatInDb(from, to) {
 function mergeChats(oldChat, newChat) {
   return oldChat.messages.concat(newChat.messages);
 }
-
 
 
 module.exports = {saveMessageInRedis, setChatDetails, saveChatInDb};
