@@ -98,13 +98,12 @@ class AppChat extends HTMLElement {
   renderMessages(messages) {
     console.log(messages);
     messages.forEach(currentMessage => {
-      debugger;
       if (currentMessage.from === this.me) {
-        this.addReceivedMessage(currentMessage.message);
-      } else {
         this.addSendMessage(currentMessage.message);
+      } else {
+        this.addReceivedMessage(currentMessage.message);
       }
-    })
+    });
   }
 
   render() {

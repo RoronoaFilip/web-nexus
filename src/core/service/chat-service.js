@@ -47,7 +47,6 @@ function getExactKey(from, to) {
 }
 
 function getMessagesToJsonArray(id) {
-  debugger;
   return new Promise((resolve, reject) => {
     redisClient.lRange(id, 0, -1)
         .then((result) => result.map(JSON.parse))
@@ -72,7 +71,6 @@ function saveChatInDb(from, to) {
               .catch((error) => Promise.reject(error))
       )
       .then(async ({ chatId, messages }) => {
-        debugger;
         // TODO loading the chat from the database
         const usersArray = [from, to];
         usersArray.sort();
@@ -116,6 +114,7 @@ function mergeChats(oldChat, newChat) {
 }
 
 async function getMessages(from, to) {
+  [from, to] = [from, to].sort();
   const chat = await db('chat_details')
       .select('*')
       .where({
