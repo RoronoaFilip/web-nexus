@@ -62,7 +62,6 @@ function configureSocketConnection(server) {
     });
 
     socket.on('load chat', (body) => {
-      console.log('here we emit the chat')
       const {from, to} = body;
       chatService.setChatDetails(from, to, 0)
           .then((response) => console.log(respose))

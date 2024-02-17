@@ -14,7 +14,6 @@ function setChatDetails(from, to, id) {
         if (result) {
           return Promise.resolve('Chat already set!');
         }
-        debugger;
         const key = getExactKey(from, to);
         const chatId = uuidv4();
         redisClient.set(key, chatId)

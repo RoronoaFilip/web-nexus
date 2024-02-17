@@ -3,7 +3,7 @@ import './app-chat';
 const {html, render} = require('lit-html');
 const io = require("socket.io-client");
 const {createRef, ref} = require("lit-html/directives/ref.js");
-
+const commons = require('../commons');
 
 class AppChatsInput extends HTMLElement {
   socketUrl = 'http://localhost:8081';
@@ -50,7 +50,7 @@ class AppChatsInput extends HTMLElement {
     this.#socket.emit('store user', email);
   }
 
-  onSubmit(event) {
+  async onSubmit(event) {
     event.preventDefault();
     const recipient = this.#inputRef.value.value;
     const requestObject = {
@@ -58,14 +58,28 @@ class AppChatsInput extends HTMLElement {
       to: recipient
     };
     this.#socket.emit('load chat', requestObject);
-    this.renderChat(recipient);
-    fetch(this.getMessagesUrl, requestObject)
-        .then((messages) => {
-          console.log(messages)
+    await this.renderChat(recipient);
+    const body = commons.constructChatRequestOptions(this.currentUser, recipient);
+    fetch(this.getMessagesUrl, body)
+        .then(response => {
+
+          if (response.status === 404) {
+            return;
+          }
+          if (response.status === 500) {
+            alert('Internal server error!')
+          }
+
+          return response.json(); // or response.text() based on the response type
         })
-        .catch((error) => {
+        .then(messages => {
+          const chat = document.createElement('app-chat');
+          chat.setupChatFromDb(messages.messages);
+        })
+        .catch(error => {
           alert(error);
-        })
+        });
+
   }
 
   renderChat(recipient) {
@@ -74,7 +88,6 @@ class AppChatsInput extends HTMLElement {
     const chat = document.createElement('app-chat');
     chat.setMe(this.currentUser);
     chat.setRecipient(recipient);
-    chat
     chat.onSend((messageObject) => {
       if (messageObject.to !== messageObject.from) {
         this.#socket.emit("send private message", messageObject);

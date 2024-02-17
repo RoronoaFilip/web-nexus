@@ -49,6 +49,7 @@ router.post('/get-messages', async (req, res) => {
   const messages = await chatService.getMessages(from, to)
 
   if (messages) {
+    console.log(messages);
     res.status(200).send(messages);
     return;
   }
