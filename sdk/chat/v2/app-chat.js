@@ -17,6 +17,8 @@ class AppChat extends HTMLElement {
     super();
     this.#showRoot = this.attachShadow({ mode: 'closed' });
     this.closeChat = this.closeChat.bind(this);
+    this.renderMessages = this.renderMessages.bind(this);
+    this.setupChatFromDb = this.setupChatFromDb.bind(this);
   }
 
   getTemplate() {
@@ -54,12 +56,14 @@ class AppChat extends HTMLElement {
   }
 
   addReceivedMessage(message) {
+    console.log('received message: ', message);
     this.messages.push({ type: 'received', message });
     this.render();
   }
 
   addSendMessage(message) {
-    this.messages.push({ type: 'received', message });
+    console.log('send message: ', message);
+    this.messages.push({ type: 'sent', message });
     this.render();
   }
 
@@ -84,6 +88,22 @@ class AppChat extends HTMLElement {
     document.getElementById(`chatBox${this.them}`)?.remove();
     commons.constructChatRequestOptions(this.me, this.them);
     this.onCloseCb({ from: this.me, to: this.them });
+  }
+
+  async setupChatFromDb(messages) {
+    await this.renderMessages(messages);
+    this.render();
+  }
+
+  renderMessages(messages) {
+    console.log(messages);
+    messages.forEach(currentMessage => {
+      if (currentMessage.from === this.me) {
+        this.addSendMessage(currentMessage.message);
+      } else {
+        this.addReceivedMessage(currentMessage.message);
+      }
+    });
   }
 
   render() {

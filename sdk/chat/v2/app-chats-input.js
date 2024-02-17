@@ -3,10 +3,11 @@ import './app-chat';
 const {html, render} = require('lit-html');
 const io = require("socket.io-client");
 const {createRef, ref} = require("lit-html/directives/ref.js");
-
+const commons = require('../commons');
 
 class AppChatsInput extends HTMLElement {
   socketUrl = 'http://localhost:8081';
+  getMessagesUrl = 'http://localhost:8081/api/chat/get-messages';
   openChatUsernames = [];
   #socket;
   #showRoot;
@@ -26,15 +27,13 @@ class AppChatsInput extends HTMLElement {
       let chatBox = document.getElementById(`chatBox${from}`);
       if (!chatBox) {
         chatBox = this.renderChat(from);
+        this.loadMessages(chatBox, this.currentUser, from, message);
+      } else {
+        chatBox.addReceivedMessage(message);
       }
-      chatBox.addReceivedMessage(message);
     });
     this.#socket.on("private message error", (error) => {
       alert(error);
-    });
-    this.#socket.on('load chat', (messages) => {
-      const chat = document.createElement('app-chat');
-      console.log(messages);
     });
   }
 
@@ -60,8 +59,9 @@ class AppChatsInput extends HTMLElement {
       from: this.currentUser,
       to: recipient
     };
-    this.#socket.emit('set chat', requestObject);
-    this.renderChat(recipient);
+    this.#socket.emit('load chat', requestObject);
+    const chat = this.renderChat(recipient);
+    this.loadMessages(chat, this.currentUser, recipient);
   }
 
   renderChat(recipient) {
@@ -70,7 +70,6 @@ class AppChatsInput extends HTMLElement {
     const chat = document.createElement('app-chat');
     chat.setMe(this.currentUser);
     chat.setRecipient(recipient);
-    chat
     chat.onSend((messageObject) => {
       if (messageObject.to !== messageObject.from) {
         this.#socket.emit("send private message", messageObject);
@@ -89,6 +88,29 @@ class AppChatsInput extends HTMLElement {
     chat.render();
 
     return chat;
+  }
+
+  loadMessages(chat, from, to, message = null) {
+    const body = commons.constructChatRequestOptions(from, to);
+    fetch(this.getMessagesUrl, body)
+        .then(response => {
+
+          if (response.status !== 200) {
+            return Promise.reject("no chat found");
+          }
+
+          return response.json(); // or response.text() based on the response type
+        })
+        .then(messages => {
+          if (message) {
+            messages.messages.push({from: to, message});
+          }
+
+          chat.setupChatFromDb(messages.messages);
+        })
+        .catch(error => {
+          alert(error);
+        });
   }
 
   render() {
